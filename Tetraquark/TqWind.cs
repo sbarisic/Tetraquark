@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Tetraquark {
+namespace Tq {
 	public partial class TqWind : Form {
 
 		public TqWind() {
@@ -15,7 +15,11 @@ namespace Tetraquark {
 		}
 
 		private void TqWind_Load(object sender, EventArgs e) {
-			FormClosed += (S, E) => Program.Running = false;
+		}
+
+		protected override void OnClosed(EventArgs e) {
+			base.OnClosed(e);
+			Program.Running = false;
 		}
 	}
 }
