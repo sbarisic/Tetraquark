@@ -4,9 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System.Threading;
 
 using SFML.Graphics;
-using SFML.Window;
+using SFML.System;
+using View = SFML.Graphics.View;
 
 namespace Tq {
 	static class Program {
@@ -29,29 +33,19 @@ namespace Tq {
 			}
 
 			TqWind Wind = new TqWind();
-			RenderWindow RWind = new RenderWindow(Wind.Handle);
 			Wind.Show();
-
-			Text T = new Text("The slow red fox doesn't jump over the hyperactive dog",
-				ResourceMgr.Get<Font>("Inconsolata"), 16);
-			T.Position = new SFML.System.Vector2f(20, 80);
-
-			Wind.KeyUp += (S, E) => {
-				if (E.KeyCode == Keys.P)
-					RWind.Capture().SaveToFile("test.png");
-			};
-
+			RenderWindow RWind = new RenderWindow(Wind.Handle);
+			Clock C = new Clock();
+			
 			while (Running) {
-				RWind.Clear(Color.Black);
-				RWind.Draw(T);
-
-				RWind.Display();
-
 				Application.DoEvents();
+				while (C.ElapsedTime.AsSeconds() < 1.0f / 60)
+					;
+				Wind.Update(C.Restart().AsSeconds());
+				Wind.Draw(RWind);
+				RWind.Display();
 			}
 
-			/*Console.WriteLine("Done!");
-			Console.ReadLine();*/
 			Environment.Exit(0);
 		}
 	}
