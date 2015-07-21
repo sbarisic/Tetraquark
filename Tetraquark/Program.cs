@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
@@ -10,6 +9,7 @@ using System.Threading;
 
 using SFML.Graphics;
 using SFML.System;
+using SFML.Window;
 using View = SFML.Graphics.View;
 
 namespace Tq {
@@ -21,9 +21,6 @@ namespace Tq {
 			Console.Title = "Tetraquark Console";
 			Running = true;
 
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
-
 			PackMgr.Mount("Fonts.zip");
 
 			string[] Files = PackMgr.GetFiles();
@@ -32,17 +29,24 @@ namespace Tq {
 					ResourceMgr.Register<Font>(PackMgr.OpenFile(Files[i]), Path.GetFileNameWithoutExtension(Files[i]));
 			}
 
-			TqWind Wind = new TqWind();
-			Wind.Show();
-			RenderWindow RWind = new RenderWindow(Wind.Handle);
+			var Bounds = new Vector2f();
+			//var Bounds = Screen.GetBounds(this);
+			//Bounds = new Vector2f(864, 486);
+			Bounds = new Vector2f(960, 540);
+			//Bounds = new Vector2f(1280, 720);
+			Scales.Init(Bounds);
+
+			RenderWindow RWind = new RenderWindow(new VideoMode((uint)Scales.XRes, (uint)Scales.YRes),
+				"Tetraquark", Styles.None);
+			TqRenderer Rend = new TqRenderer(RWind);
 			Clock C = new Clock();
-			
+
 			while (Running) {
-				Application.DoEvents();
+				RWind.DispatchEvents();
 				while (C.ElapsedTime.AsSeconds() < 1.0f / 60)
 					;
-				Wind.Update(C.Restart().AsSeconds());
-				Wind.Draw(RWind);
+				Rend.Update(C.Restart().AsSeconds());
+				Rend.Draw(RWind);
 				RWind.Display();
 			}
 

@@ -3,22 +3,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 using SFML.System;
+using SFML.Window;
 
 namespace Tq.Atomic {
 	class EventHandler {
-		public static EventHandler GrabbedHander;
-
-		protected HashSet<EventHandler> Childern;
-		protected bool Enabled, Active;
-		protected EventHandler ActiveChild;
+		static EventHandler GrabbedHander;
+		HashSet<EventHandler> Childern;
+		bool Enabled, Active;
+		EventHandler ActiveChild;
 		EventHandler Parent;
+
+		protected Vector2f GrabPos;
 
 		public EventHandler() {
 			Childern = new HashSet<EventHandler>();
 			Enable();
+		}
+
+		public EventHandler(Window Wnd)
+			: this() {
+				Wnd.MouseMoved += (S, E) => {
+					if (GrabbedHander != null)
+						GrabbedHander.OnMouseDrag(E);
+					else
+						OnMouseMove(E);
+				};
+			Wnd.MouseButtonPressed += (S, E) => OnMouse(E, true);
+			Wnd.MouseButtonReleased += (S, E) => {
+				OnMouse(E, false);
+				OnMouseClick(E, false);
+			};
+			Wnd.KeyPressed += (S, E) => OnKey(E, true);
+			Wnd.KeyReleased += (S, E) => OnKey(E, false);
+			Wnd.TextEntered += (S, E) => OnKeyPress(E);
 		}
 
 		public virtual void AddChild(EventHandler C) {
@@ -41,6 +60,10 @@ namespace Tq.Atomic {
 			return Parent;
 		}
 
+		public virtual IEnumerable<EventHandler> GetChildern() {
+			return Childern;
+		}
+
 		public virtual void SetParent(EventHandler P) {
 			if (Parent != null)
 				Parent.RemoveChild(this);
@@ -55,6 +78,10 @@ namespace Tq.Atomic {
 			return V - GetAABB().Pos;
 		}
 
+		public virtual Vector2f ParentRelative(Vector2f V) {
+			return GetParent().Relative(V);
+		}
+
 		public virtual void Enable() {
 			Enabled = true;
 		}
@@ -65,8 +92,9 @@ namespace Tq.Atomic {
 
 		public virtual void Activate() {
 			Active = true;
-			if (GetParent() != null)
-				GetParent().DoActivate();
+			EventHandler Parent = GetParent();
+			if (Parent != null)
+				Parent.DoActivate();
 		}
 
 		public virtual void Deactivate() {
@@ -85,29 +113,33 @@ namespace Tq.Atomic {
 				Deactivate();
 		}
 
-		public virtual bool OnMouse(MouseEventArgs E, bool Down) {
+		public virtual bool OnMouse(MouseButtonEventArgs E, bool Down) {
 			bool ValidChildern = false;
 
-			if (!Down)
+			if (Down)
 				ActiveChild = null;
 			foreach (var Child in Childern) {
 				if (Child.Enabled && Child.GetAABB().IsInside(E.X, E.Y)) {
-					if (!Down) {
+					if (Down) {
+						Child.DoDeactivate();
 						Child.DoActivate();
 						ActiveChild = Child;
 					}
 					Child.OnMouse(E, Down);
 					ValidChildern = true;
-				} else if (!Down)
+				} else if (Down)
 					Child.DoDeactivate();
 			}
 
-			if (!ValidChildern && Down)
-				GrabbedHander = this;
+			if (!ValidChildern && Down && Enabled && Active) {
+				GrabbedHander = this;	
+				GrabPos = Relative(new Vector2f(E.X, E.Y));
+			}
+
 			return ValidChildern;
 		}
 
-		public virtual bool OnMouseMove(MouseEventArgs E) {
+		public virtual bool OnMouseMove(MouseMoveEventArgs E) {
 			bool ValidChildern = false;
 
 			foreach (var Child in Childern)
@@ -116,22 +148,18 @@ namespace Tq.Atomic {
 					ValidChildern = true;
 				}
 
-			/*if (!(MouseDown && E.Button != MouseButtons.None && !ValidChildern)){
-				MouseDown = false;
-				GrabbedHander = null;
-			}*/
 			return ValidChildern;
 		}
 
-		public virtual bool OnMouseDrag(MouseEventArgs E) {
-			if (E.Button == MouseButtons.None) {
+		public virtual bool OnMouseDrag(MouseMoveEventArgs E) {
+			if (!Mouse.IsButtonPressed(Mouse.Button.Left)) {
 				GrabbedHander = null;
 				return true;
 			}
 			return false;
 		}
 
-		public virtual bool OnMouseClick(MouseEventArgs E, bool IsDouble) {
+		public virtual bool OnMouseClick(MouseButtonEventArgs E, bool IsDouble) {
 			bool ValidChildern = false;
 			foreach (var Child in Childern)
 				if (Child.Enabled && Child.GetAABB().IsInside(E.X, E.Y)) {
@@ -150,7 +178,7 @@ namespace Tq.Atomic {
 			return ValidChildern;
 		}
 
-		public virtual bool OnKeyPress(KeyPressEventArgs E) {
+		public virtual bool OnKeyPress(TextEventArgs E) {
 			bool ValidChildern = false;
 			if (ActiveChild != null) {
 				ActiveChild.OnKeyPress(E);

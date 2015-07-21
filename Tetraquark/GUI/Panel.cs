@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using SFML.Graphics;
 using SFML.System;
+using SFML.Window;
 
 namespace Tq.GUI {
 	class Panel : Base {
@@ -13,8 +14,6 @@ namespace Tq.GUI {
 		Color InactiveColor = new Color(10, 10, 10, 180);
 
 		RectangleShape Rect;
-		int N = NN++;
-		static int NN = 0;
 
 		public Panel(Vector2f Pos, Vector2u Size)
 			: base(Pos, Size) {
@@ -24,27 +23,14 @@ namespace Tq.GUI {
 			Rect.FillColor = InactiveColor;
 		}
 
-		Vector2f ClickPos;
-
-		public override bool OnMouse(System.Windows.Forms.MouseEventArgs E, bool Down) {
-			if (!base.OnMouse(E, Down)) {
-				if (Down) {
-					Deactivate();
-					Activate();
-					ClickPos = Relative(new Vector2f(E.X, E.Y));
-				}
-			}
-			return false;
-		}
-
-		public override bool OnMouseDrag(System.Windows.Forms.MouseEventArgs E) {
+		public override bool OnMouseDrag(MouseMoveEventArgs E) {
 			if (!base.OnMouseDrag(E)) {
-				Position = GetParent().Relative(new Vector2f(E.X, E.Y)) - ClickPos;
+				Position = ParentRelative(new Vector2f(E.X, E.Y)) - GrabPos;
 				Invalidate();
 			}
 			return false;
 		}
-
+		
 		public override void Activate() {
 			base.Activate();
 			Invalidate();

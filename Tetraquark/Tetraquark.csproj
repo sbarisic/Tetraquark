@@ -67,23 +67,15 @@
     <Compile Include="Atomic\EventHandler.cs" />
     <Compile Include="GUI\Base.cs" />
     <Compile Include="GUI\Panel.cs" />
+    <Compile Include="TqRenderer.cs" />
     <Compile Include="Utils\Extensions\FloatRectExtensions.cs" />
     <Compile Include="PackMgr.cs" />
     <Compile Include="ResourceMgr.cs" />
     <Compile Include="Utils\Scales.cs" />
-    <Compile Include="TqWind.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TqWind.Designer.cs">
-      <DependentUpon>TqWind.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Utils.cs" />
     <Compile Include="Utils\Extensions\VectorExtensions.cs" />
-    <EmbeddedResource Include="TqWind.resx">
-      <DependentUpon>TqWind.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

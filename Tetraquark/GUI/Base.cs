@@ -85,6 +85,7 @@ namespace Tq.GUI {
 		}
 
 		public virtual void DrawChildern(RenderStates RS) {
+			var Childern = GetChildern();
 			foreach (var Child in Childern)
 				if (Child is Base)
 					Draw((Drawable)Child, RS);
