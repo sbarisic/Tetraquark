@@ -64,8 +64,12 @@ namespace Tq {
 			: this(Pos.X, Pos.Y, Size.X, Size.Y) {
 		}
 
-		public bool IsInside(Vector2f V) {
+		public static bool IsInside(float X, float Y, float W, float H, Vector2f V) {
 			return (V.X > X && V.X < X + W && V.Y > Y && V.Y < Y + H);
+		}
+
+		public bool IsInside(Vector2f V) {
+			return IsInside(X, Y, W, H, V);
 		}
 
 		public bool IsInside(float X, float Y) {

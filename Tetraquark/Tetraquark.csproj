@@ -63,6 +63,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GUI\Label.cs" />
+    <Compile Include="GUI\Window.cs" />
     <Compile Include="Math\AABB.cs" />
     <Compile Include="Atomic\EventHandler.cs" />
     <Compile Include="GUI\Base.cs" />
@@ -71,6 +73,7 @@
     <Compile Include="Utils\Extensions\FloatRectExtensions.cs" />
     <Compile Include="PackMgr.cs" />
     <Compile Include="ResourceMgr.cs" />
+    <Compile Include="Utils\Extensions\TextExtensions.cs" />
     <Compile Include="Utils\Scales.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -13,7 +13,7 @@ namespace Tq {
 		RenderTexture RTex;
 		Sprite RTexSprite;
 
-		Text FPSLabel, GL;
+		Text FPSLabel;
 
 		public TqRenderer(Window Wind)
 			: base(Wind) {
@@ -21,21 +21,24 @@ namespace Tq {
 			RTexSprite = new Sprite(RTex.Texture);
 
 			FPSLabel = new Text("FPS: Unknown", ResourceMgr.Get<Font>("Inconsolata"),
-				Scales.GetFontSize(7));
+				Scales.GetFontSize(16));
 			FPSLabel.Position = new Vector2f(0.01f * Scales.XRes, 0);
 
-			GL = new Text("OpenGL'd it, bitch.", ResourceMgr.Get<Font>("Inconsolata"),
-				Scales.GetFontSize(38));
+			Wnd = new GUI.Window(new Vector2f(Scales.XRes * 0.1f, Scales.YRes * 0.1f),
+				new Vector2u((uint)(Scales.XRes * 0.8f), (uint)(Scales.YRes * 0.8f)),
+				ResourceMgr.Get<Font>("Inconsolata"), "AAAAAAAAAAAAAAAA");
+			Wnd.SetParent(this);
 
-			GL.Rotation = 12;
-			GL.Position = new Vector2f(0.5f * Scales.XRes, 0.5f * Scales.YRes);
-			GL.Origin = GL.GetLocalBounds().GetSize() / 2;
+			GUI.Window Wind1 = new GUI.Window(new Vector2f(Scales.XRes * 0.01f, Scales.YRes * 0.01f),
+				new Vector2u((uint)(Scales.XRes * 0.4f), (uint)(Scales.YRes * 0.4f)),
+				ResourceMgr.Get<Font>("Inconsolata"), "One");
+			Wind1.SetParent(Wnd.ClientArea);
+			Wind1.Disable();
 
-			P = new GUI.Panel(new Vector2f(100, 100), new Vector2u(500, 400));
-			P.SetParent(this);
-
-			GUI.Panel P1 = new GUI.Panel(new Vector2f(10, 10), new Vector2u(400, 300));
-			P1.SetParent(P);
+			GUI.Window Wind2 = new GUI.Window(new Vector2f(Scales.XRes * 0.05f, Scales.YRes * 0.05f),
+				new Vector2u((uint)(Scales.XRes * 0.4f), (uint)(Scales.YRes * 0.4f)),
+				ResourceMgr.Get<Font>("Inconsolata"), "Two");
+			Wind2.SetParent(Wnd.ClientArea);
 		}
 
 		public override bool OnKey(KeyEventArgs E, bool Down) {
@@ -48,14 +51,13 @@ namespace Tq {
 			FPSLabel.DisplayedString = "Fps: " + Math.Round(1.0f / Dt, 1) + "; Ms: " + Math.Round(Dt, 2);
 		}
 
-		GUI.Panel P;
+		GUI.Window Wnd;
 
 		public void Draw(RenderTarget RT) {
 			RT.Clear(Color.Black);
-			RTex.Clear(new Color(0, 76, 153));
+			RTex.Clear(new Color(20, 20, 20));
 
-			RTex.Draw(P);
-
+			RTex.Draw(Wnd);
 			RTex.Draw(FPSLabel);
 			RTex.Display();
 			RT.Draw(RTexSprite);

@@ -30,7 +30,8 @@ namespace Tq {
 		}
 
 		public static uint GetFontSize(float Scale) {
-			return (uint)(Scale * YRes / 200);
+			//return (uint)(Scale * YRes / 200);
+			return (uint)Scale;
 		}
 	}
 }

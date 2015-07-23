@@ -10,26 +10,31 @@ using SFML.Window;
 namespace Tq.Atomic {
 	class EventHandler {
 		static EventHandler GrabbedHander;
-		HashSet<EventHandler> Childern;
+		LinkedList<EventHandler> Childern;
 		bool Enabled, Active;
 		EventHandler ActiveChild;
 		EventHandler Parent;
 
 		protected Vector2f GrabPos;
 
+		protected bool IsEnabled {
+			get {
+				return Enabled;
+			}
+		}
+
 		public EventHandler() {
-			Childern = new HashSet<EventHandler>();
-			Enable();
+			Childern = new LinkedList<EventHandler>();
 		}
 
 		public EventHandler(Window Wnd)
 			: this() {
-				Wnd.MouseMoved += (S, E) => {
-					if (GrabbedHander != null)
-						GrabbedHander.OnMouseDrag(E);
-					else
-						OnMouseMove(E);
-				};
+			Wnd.MouseMoved += (S, E) => {
+				if (GrabbedHander != null)
+					GrabbedHander.OnMouseDrag(E);
+				else
+					OnMouseMove(E);
+			};
 			Wnd.MouseButtonPressed += (S, E) => OnMouse(E, true);
 			Wnd.MouseButtonReleased += (S, E) => {
 				OnMouse(E, false);
@@ -38,15 +43,20 @@ namespace Tq.Atomic {
 			Wnd.KeyPressed += (S, E) => OnKey(E, true);
 			Wnd.KeyReleased += (S, E) => OnKey(E, false);
 			Wnd.TextEntered += (S, E) => OnKeyPress(E);
+
+			Enable();
 		}
 
-		public virtual void AddChild(EventHandler C) {
+		public virtual void AddChild(EventHandler C, bool Last = false) {
 			if (Childern.Contains(C))
 				return;
 			if (C.Parent != null)
 				C.Parent.RemoveChild(C);
 			C.Parent = this;
-			Childern.Add(C);
+			if (Last)
+				Childern.AddLast(C);
+			else
+				Childern.AddFirst(C);
 		}
 
 		public virtual void RemoveChild(EventHandler C) {
@@ -60,8 +70,8 @@ namespace Tq.Atomic {
 			return Parent;
 		}
 
-		public virtual IEnumerable<EventHandler> GetChildern() {
-			return Childern;
+		public virtual EventHandler[] GetChildern() {
+			return Childern.ToArray();
 		}
 
 		public virtual void SetParent(EventHandler P) {
@@ -107,6 +117,7 @@ namespace Tq.Atomic {
 		}
 
 		void DoDeactivate() {
+			var Childern = GetChildern();
 			foreach (var Child in Childern)
 				Child.DoDeactivate();
 			if (Active)
@@ -118,21 +129,25 @@ namespace Tq.Atomic {
 
 			if (Down)
 				ActiveChild = null;
+
+			var Childern = GetChildern();
 			foreach (var Child in Childern) {
-				if (Child.Enabled && Child.GetAABB().IsInside(E.X, E.Y)) {
-					if (Down) {
-						Child.DoDeactivate();
-						Child.DoActivate();
-						ActiveChild = Child;
+				if (!ValidChildern  && Child.GetAABB().IsInside(E.X, E.Y)) {
+					if (Child.Enabled) {
+						if (Down) {
+							Child.DoDeactivate();
+							Child.DoActivate();
+							ActiveChild = Child;
+						}
+						Child.OnMouse(E, Down);
 					}
-					Child.OnMouse(E, Down);
 					ValidChildern = true;
 				} else if (Down)
 					Child.DoDeactivate();
 			}
 
 			if (!ValidChildern && Down && Enabled && Active) {
-				GrabbedHander = this;	
+				GrabbedHander = this;
 				GrabPos = Relative(new Vector2f(E.X, E.Y));
 			}
 
@@ -141,10 +156,11 @@ namespace Tq.Atomic {
 
 		public virtual bool OnMouseMove(MouseMoveEventArgs E) {
 			bool ValidChildern = false;
-
+			var Childern = GetChildern();
 			foreach (var Child in Childern)
-				if (Child.Enabled && Child.GetAABB().IsInside(E.X, E.Y)) {
-					Child.OnMouseMove(E);
+				if (!ValidChildern && Child.GetAABB().IsInside(E.X, E.Y)) {
+					if (Child.Enabled)
+						Child.OnMouseMove(E);
 					ValidChildern = true;
 				}
 
@@ -161,9 +177,11 @@ namespace Tq.Atomic {
 
 		public virtual bool OnMouseClick(MouseButtonEventArgs E, bool IsDouble) {
 			bool ValidChildern = false;
+			var Childern = GetChildern();
 			foreach (var Child in Childern)
-				if (Child.Enabled && Child.GetAABB().IsInside(E.X, E.Y)) {
-					Child.OnMouseClick(E, IsDouble);
+				if (!ValidChildern && Child.GetAABB().IsInside(E.X, E.Y)) {
+					if (Child.Enabled)
+						Child.OnMouseClick(E, IsDouble);
 					ValidChildern = true;
 				}
 			return ValidChildern;
@@ -171,7 +189,7 @@ namespace Tq.Atomic {
 
 		public virtual bool OnKey(KeyEventArgs E, bool Down) {
 			bool ValidChildern = false;
-			if (ActiveChild != null) {
+			if (ActiveChild != null && ActiveChild.Enabled) {
 				ActiveChild.OnKey(E, Down);
 				ValidChildern = true;
 			}
@@ -180,7 +198,7 @@ namespace Tq.Atomic {
 
 		public virtual bool OnKeyPress(TextEventArgs E) {
 			bool ValidChildern = false;
-			if (ActiveChild != null) {
+			if (ActiveChild != null && ActiveChild.Enabled) {
 				ActiveChild.OnKeyPress(E);
 				ValidChildern = true;
 			}

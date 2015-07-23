@@ -10,15 +10,32 @@ using SFML.Window;
 
 namespace Tq.GUI {
 	class Base : Atomic.EventHandler, Drawable, RenderTarget {
-		internal RenderTexture RT;
-		internal Sprite RTSprite;
-		internal bool Invalid;
+		protected RenderTexture RT;
+		protected Sprite RTSprite;
+		protected bool Invalid;
 
-		public Base(Vector2f Pos, Vector2u Size) {
+		protected bool AutoColor;
+		public Color Color;
+		public Color ColorDisabled = new Color(90, 50, 50, 220);
+		public Color ColorActive = new Color(120, 80, 40, 220);
+		public Color ColorInactive = new Color(60, 60, 60, 220);
+		public Color ColorBorder = new Color(36, 36, 36, 220);
+
+		protected void Init(Vector2f Pos, Vector2u Size) {
 			RT = new RenderTexture(Size.X, Size.Y);
 			RTSprite = new Sprite(RT.Texture);
-			RTSprite.Position = Pos;
+			Position = Pos;
+			Enable();
 			Invalidate();
+		}
+
+		public Base() {
+			AutoColor = true;
+		}
+
+		public Base(Vector2f Pos, Vector2u Size)
+			: this() {
+			Init(Pos, Size);
 		}
 
 		public virtual View DefaultView {
@@ -81,14 +98,47 @@ namespace Tq.GUI {
 			}
 		}
 
-		public virtual void Draw(RenderStates RS) {
+		public override void Enable() {
+			base.Enable();
 		}
 
-		public virtual void DrawChildern(RenderStates RS) {
-			var Childern = GetChildern();
-			foreach (var Child in Childern)
-				if (Child is Base)
-					Draw((Drawable)Child, RS);
+		public override void Disable() {
+			base.Disable();
+			if (AutoColor)
+				Color = ColorDisabled;
+		}
+
+		public override void Activate() {
+			base.Activate();
+			Invalidate();
+			if (AutoColor)
+				Color = ColorActive;
+		}
+
+		public override void Deactivate() {
+			base.Deactivate();
+			Invalidate();
+			if (AutoColor)
+				Color = ColorInactive;
+		}
+
+		public virtual void ToTop() {
+			var Parent = GetParent();
+			if (Parent != null) {
+				Parent.RemoveChild(this);
+				Parent.AddChild(this, false);
+			}
+		}
+
+		public virtual void ToBottom() {
+			var Parent = GetParent();
+			if (Parent != null) {
+				Parent.RemoveChild(this);
+				Parent.AddChild(this, true);
+			}
+		}
+
+		public virtual void Draw(RenderStates RS) {
 		}
 
 		public override AABB GetAABB() {
@@ -118,7 +168,12 @@ namespace Tq.GUI {
 				Invalid = false;
 				Clear(Color.Transparent);
 				Draw(states);
-				DrawChildern(states);
+				// Draw childern
+				var Childern = GetChildern().Reverse();
+				foreach (var Child in Childern)
+					if (Child is Drawable)
+						Draw((Drawable)Child, states);
+
 				RT.Display();
 			}
 			RTSprite.Draw(target, states);

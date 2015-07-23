@@ -30,11 +30,14 @@ namespace Tq {
 			}
 
 			var Bounds = new Vector2f();
-			//var Bounds = Screen.GetBounds(this);
-			//Bounds = new Vector2f(864, 486);
-			Bounds = new Vector2f(960, 540);
+			VideoMode Desktop = VideoMode.DesktopMode;
+			//Bounds = new Vector2f(Desktop.Width - 50, Desktop.Height - 50);
+			Bounds = new Vector2f(864, 486);
+			//Bounds = new Vector2f(960, 540);
 			//Bounds = new Vector2f(1280, 720);
 			Scales.Init(Bounds);
+
+		
 
 			RenderWindow RWind = new RenderWindow(new VideoMode((uint)Scales.XRes, (uint)Scales.YRes),
 				"Tetraquark", Styles.None);
