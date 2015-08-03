@@ -11,9 +11,11 @@ using SFML.Audio;
 namespace Tq {
 	static class ResourceMgr {
 		static Dictionary<string, Font> Fonts;
+		static Dictionary<string, Texture> Textures;
 
 		static ResourceMgr() {
 			Fonts = new Dictionary<string, Font>();
+			Textures = new Dictionary<string, Texture>();
 		}
 
 		public static void Register<T>(string Path, string Name) {
@@ -27,6 +29,8 @@ namespace Tq {
 			try {
 				if (typeof(T) == typeof(Font))
 					Fonts.Set(Name, new Font(S));
+				else if (typeof(T) == typeof(Texture))
+					Textures.Set(Name, new Texture(S));
 
 				Log += "OK";
 			} catch (Exception E) {
@@ -38,8 +42,10 @@ namespace Tq {
 		public static T Get<T>(string Name) where T : class {
 			if (typeof(T) == typeof(Font))
 				return Fonts[Name] as T;
-
-			return default(T);
+			else if (typeof(T) == typeof(Texture))
+				return Textures[Name] as T;
+			else
+				throw new Exception("Unsupported");
 		}
 	}
 }

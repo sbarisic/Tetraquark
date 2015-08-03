@@ -63,13 +63,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GUI\Label.cs" />
-    <Compile Include="GUI\Window.cs" />
+    <Compile Include="Graphics\TextBuffer.cs" />
+    <Compile Include="_OLD\GUI\Panel.cs" />
+    <Compile Include="_OLD\GUI\Label.cs" />
+    <Compile Include="_OLD\GUI\Window.cs" />
     <Compile Include="Math\AABB.cs" />
     <Compile Include="Atomic\EventHandler.cs" />
-    <Compile Include="GUI\Base.cs" />
-    <Compile Include="GUI\Panel.cs" />
-    <Compile Include="TqRenderer.cs" />
+    <Compile Include="_OLD\GUI\Base.cs" />
+    <Compile Include="_OLD\GUI\Button.cs" />
+    <Compile Include="Renderer.cs" />
     <Compile Include="Utils\Extensions\FloatRectExtensions.cs" />
     <Compile Include="PackMgr.cs" />
     <Compile Include="ResourceMgr.cs" />

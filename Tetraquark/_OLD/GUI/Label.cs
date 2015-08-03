@@ -12,8 +12,13 @@ namespace Tq.GUI {
 	class Label : Base {
 		Text Txt;
 
+		public int FontSize;
+
 		public Label(string S, Font Fnt, uint FontSize)
 			: this(new Vector2f(0, 0), S, Fnt, FontSize) {
+
+			this.FontSize = (int)FontSize;
+			HandlesEvents = false;
 			AutoColor = false;
 			ColorInactive = new Color(100, 100, 100);
 			ColorActive = Color.White;

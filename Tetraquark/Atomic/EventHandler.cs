@@ -16,6 +16,7 @@ namespace Tq.Atomic {
 		EventHandler Parent;
 
 		protected Vector2f GrabPos;
+		protected bool HandlesEvents;
 
 		protected bool IsEnabled {
 			get {
@@ -25,6 +26,7 @@ namespace Tq.Atomic {
 
 		public EventHandler() {
 			Childern = new LinkedList<EventHandler>();
+			HandlesEvents = true;
 		}
 
 		public EventHandler(Window Wnd)
@@ -132,7 +134,7 @@ namespace Tq.Atomic {
 
 			var Childern = GetChildern();
 			foreach (var Child in Childern) {
-				if (!ValidChildern  && Child.GetAABB().IsInside(E.X, E.Y)) {
+				if (!ValidChildern && Child.GetAABB().IsInside(E.X, E.Y) && Child.HandlesEvents) {
 					if (Child.Enabled) {
 						if (Down) {
 							Child.DoDeactivate();
@@ -158,7 +160,7 @@ namespace Tq.Atomic {
 			bool ValidChildern = false;
 			var Childern = GetChildern();
 			foreach (var Child in Childern)
-				if (!ValidChildern && Child.GetAABB().IsInside(E.X, E.Y)) {
+				if (!ValidChildern && Child.GetAABB().IsInside(E.X, E.Y) && Child.HandlesEvents) {
 					if (Child.Enabled)
 						Child.OnMouseMove(E);
 					ValidChildern = true;
@@ -179,7 +181,7 @@ namespace Tq.Atomic {
 			bool ValidChildern = false;
 			var Childern = GetChildern();
 			foreach (var Child in Childern)
-				if (!ValidChildern && Child.GetAABB().IsInside(E.X, E.Y)) {
+				if (!ValidChildern && Child.GetAABB().IsInside(E.X, E.Y) && Child.HandlesEvents) {
 					if (Child.Enabled)
 						Child.OnMouseClick(E, IsDouble);
 					ValidChildern = true;
@@ -189,7 +191,7 @@ namespace Tq.Atomic {
 
 		public virtual bool OnKey(KeyEventArgs E, bool Down) {
 			bool ValidChildern = false;
-			if (ActiveChild != null && ActiveChild.Enabled) {
+			if (ActiveChild != null && ActiveChild.Enabled && ActiveChild.HandlesEvents) {
 				ActiveChild.OnKey(E, Down);
 				ValidChildern = true;
 			}
@@ -198,7 +200,7 @@ namespace Tq.Atomic {
 
 		public virtual bool OnKeyPress(TextEventArgs E) {
 			bool ValidChildern = false;
-			if (ActiveChild != null && ActiveChild.Enabled) {
+			if (ActiveChild != null && ActiveChild.Enabled && ActiveChild.HandlesEvents) {
 				ActiveChild.OnKeyPress(E);
 				ValidChildern = true;
 			}

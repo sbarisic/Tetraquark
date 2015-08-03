@@ -16,8 +16,10 @@ namespace Tq.GUI {
 
 		protected bool AutoColor;
 		public Color Color;
+		public Color ColorClose = new Color(240, 80, 40, 220);
 		public Color ColorDisabled = new Color(90, 50, 50, 220);
 		public Color ColorActive = new Color(120, 80, 40, 220);
+		public Color ColorPressed = new Color(140, 100, 60, 220);
 		public Color ColorInactive = new Color(60, 60, 60, 220);
 		public Color ColorBorder = new Color(36, 36, 36, 220);
 

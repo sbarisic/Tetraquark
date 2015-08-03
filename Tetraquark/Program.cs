@@ -15,18 +15,23 @@ using View = SFML.Graphics.View;
 namespace Tq {
 	static class Program {
 		public static bool Running;
+		public static bool Debug;
 
 		[STAThread]
 		static void Main() {
 			Console.Title = "Tetraquark Console";
 			Running = true;
+			Debug = true;
 
 			PackMgr.Mount("Fonts.zip");
+			PackMgr.Mount("ConsoleFont.zip");
 
 			string[] Files = PackMgr.GetFiles();
 			for (int i = 0; i < Files.Length; i++) {
 				if (Files[i].StartsWith("resources/fonts/"))
 					ResourceMgr.Register<Font>(PackMgr.OpenFile(Files[i]), Path.GetFileNameWithoutExtension(Files[i]));
+				else if (Files[i].StartsWith("resources/textures/"))
+					ResourceMgr.Register<Texture>(PackMgr.OpenFile(Files[i]), Path.GetFileNameWithoutExtension(Files[i]));
 			}
 
 			var Bounds = new Vector2f();
@@ -41,7 +46,7 @@ namespace Tq {
 
 			RenderWindow RWind = new RenderWindow(new VideoMode((uint)Scales.XRes, (uint)Scales.YRes),
 				"Tetraquark", Styles.None);
-			TqRenderer Rend = new TqRenderer(RWind);
+			Renderer Rend = new Renderer(RWind);
 			Clock C = new Clock();
 
 			while (Running) {
