@@ -28,7 +28,7 @@ namespace Tq {
 
 			TBuffer = new Graphics.TextBuffer(80, 25);
 			TBuffer.SetFontTexture(ResourceMgr.Get<Texture>("font")); // Load font
-			TBuffer.Sprite.Position = new Vector2f(TBuffer.CharWidth, TBuffer.CharHeight);
+			TBuffer.Sprite.Position = new Vector2f(TBuffer.CharWidth, TBuffer.CharHeight * 2);
 		}
 
 		public override bool OnKey(KeyEventArgs E, bool Down) {
@@ -42,9 +42,10 @@ namespace Tq {
 		public void Update(float Dt) {
 			if (Program.Debug)
 				FPSLabel.DisplayedString = "Fps: " + Math.Round(1.0f / Dt, 1) + "; Ms: " + Math.Round(Dt, 2);
-			
+
 			for (int i = 0; i < TBuffer.BufferWidth * TBuffer.BufferHeight; i++)
-				TBuffer.Set(i, (char)Rnd.Next(255), new Color((byte)Rnd.Next(255), (byte)Rnd.Next(255), (byte)Rnd.Next(255)),
+				TBuffer[i] = new Graphics.TextBufferEntry((char)Rnd.Next(255),
+					new Color((byte)Rnd.Next(255), (byte)Rnd.Next(255), (byte)Rnd.Next(255)),
 					new Color((byte)Rnd.Next(255), (byte)Rnd.Next(255), (byte)Rnd.Next(255)));
 		}
 
