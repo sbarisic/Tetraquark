@@ -17,11 +17,21 @@ namespace Tq {
 		public static bool Running;
 		public static bool Debug;
 
+		public static float GameTime {
+			get {
+				return (float)GameWatch.ElapsedMilliseconds / 1000;
+			}
+		}
+
+		static Stopwatch GameWatch;
+
 		[STAThread]
 		static void Main() {
 			Console.Title = "Tetraquark Console";
 			Running = true;
 			Debug = true;
+			GameWatch = new Stopwatch();
+			GameWatch.Start();
 
 			PackMgr.Mount("Fonts.zip");
 			PackMgr.Mount("ConsoleFont.zip");
@@ -41,8 +51,6 @@ namespace Tq {
 			//Bounds = new Vector2f(960, 540);
 			//Bounds = new Vector2f(1280, 720);
 			Scales.Init(Bounds);
-
-		
 
 			RenderWindow RWind = new RenderWindow(new VideoMode((uint)Scales.XRes, (uint)Scales.YRes),
 				"Tetraquark", Styles.None);

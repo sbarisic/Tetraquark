@@ -19,7 +19,7 @@ namespace Tq {
 		public static Vector2u ToVec2u(this Vector2f V) {
 			return new Vector2u((uint)V.X, (uint)V.Y);
 		}
-
+		
 		public static float LengthSq(this Vector2f V) {
 			return V.X * V.X + V.Y * V.Y;
 		}

@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Graphics\TextBuffer.cs" />
+    <Compile Include="Shaders\CRT.cs" />
     <Compile Include="_OLD\GUI\Panel.cs" />
     <Compile Include="_OLD\GUI\Label.cs" />
     <Compile Include="_OLD\GUI\Window.cs" />
