@@ -12,12 +12,28 @@ namespace Tq.Graphics {
 			this.Back = Back;
 		}
 
+		public TextBufferEntry(char Char)
+			: this(Char, new Color(192, 192, 192), Color.Black) {
+		}
+
+		public TextBufferEntry(Color Fore, Color Back)
+			: this((char)0, Fore, Back) {
+		}
+
+		public TextBufferEntry(Color Colors)
+			: this(Colors, Colors) {
+		}
+
 		public static implicit operator char(TextBufferEntry E) {
 			return E.Char;
 		}
 
 		public static implicit operator TextBufferEntry(char C) {
-			return new TextBufferEntry(C, Color.White, Color.Black);
+			return new TextBufferEntry(C);
+		}
+
+		public static implicit operator TextBufferEntry(byte B) {
+			return (char)B;
 		}
 	}
 
@@ -92,7 +108,6 @@ void main() {
 		byte[] ForeDataRaw, BackDataRaw;
 
 		public TextBuffer(uint W, uint H) {
-
 			this.W = (int)W;
 			this.H = (int)H;
 			Dirty = true;
@@ -112,10 +127,10 @@ void main() {
 			TextStates = new RenderStates(TextBufferShader);
 
 			ScreenQuad = new Vertex[] {
-				new Vertex(new Vector2f(0, 0), Color.Red, new Vector2f(0, 0)), 
-				new Vertex(new Vector2f(RT.Size.X, 0), Color.Green, new Vector2f(1, 0)),
-				new Vertex(new Vector2f(RT.Size.X, RT.Size.Y), Color.Blue, new Vector2f(1, 1)),
-				new Vertex(new Vector2f(0, RT.Size.Y), Color.Black, new Vector2f(0, 1)),
+				new Vertex(new Vector2f(0, 0), Color.White, new Vector2f(0, 0)), 
+				new Vertex(new Vector2f(RT.Size.X, 0), Color.White, new Vector2f(1, 0)),
+				new Vertex(new Vector2f(RT.Size.X, RT.Size.Y), Color.White, new Vector2f(1, 1)),
+				new Vertex(new Vector2f(0, RT.Size.Y), Color.White, new Vector2f(0, 1)),
 			};
 
 			Clear();
@@ -143,7 +158,7 @@ void main() {
 			ForeDataRaw[Idx + 2] = Fg.B;
 			BackDataRaw[Idx] = Bg.R;
 			BackDataRaw[Idx + 1] = Bg.G;
-			BackDataRaw[Idx + 2] = Bg.B;	
+			BackDataRaw[Idx + 2] = Bg.B;
 			BackDataRaw[Idx + 3] = Bg.A;
 			Dirty = true;
 		}
@@ -195,7 +210,7 @@ void main() {
 		}
 
 		public void Print(int X, int Y, string Str) {
-			Print(X, Y, Str, Color.White, Color.Black);
+			Print(Y * W + X, Str);
 		}
 
 		public void Print(int X, int Y, string Str, Color Fg, Color Bg) {
@@ -203,7 +218,7 @@ void main() {
 		}
 
 		public void Print(int I, string Str) {
-			Print(I, Str, Color.White, Color.Black);
+			Print(I, Str, new Color(192, 192, 192), Color.Black);
 		}
 
 		public void Print(int I, string Str, Color Fg, Color Bg) {

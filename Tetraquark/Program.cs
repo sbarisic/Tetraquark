@@ -46,10 +46,12 @@ namespace Tq {
 
 			var Bounds = new Vector2f();
 			VideoMode Desktop = VideoMode.DesktopMode;
-			//Bounds = new Vector2f(Desktop.Width - 50, Desktop.Height - 50);
-			Bounds = new Vector2f(864, 486);
+			//Bounds = new Vector2f(Desktop.Width, Desktop.Height);
+			//Bounds = new Vector2f(Desktop.Width - 100, Desktop.Height - 100);
+			//Bounds = new Vector2f(1280, 720);	
 			//Bounds = new Vector2f(960, 540);
-			//Bounds = new Vector2f(1280, 720);
+			Bounds = new Vector2f(864, 486);
+
 			Scales.Init(Bounds);
 
 			RenderWindow RWind = new RenderWindow(new VideoMode((uint)Scales.XRes, (uint)Scales.YRes),

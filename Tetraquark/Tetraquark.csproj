@@ -64,23 +64,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Graphics\TextBuffer.cs" />
+    <Compile Include="Utils\Bresenham.cs" />
     <Compile Include="Shaders\CRT.cs" />
-    <Compile Include="_OLD\GUI\Panel.cs" />
-    <Compile Include="_OLD\GUI\Label.cs" />
-    <Compile Include="_OLD\GUI\Window.cs" />
-    <Compile Include="Math\AABB.cs" />
-    <Compile Include="Atomic\EventHandler.cs" />
-    <Compile Include="_OLD\GUI\Base.cs" />
-    <Compile Include="_OLD\GUI\Button.cs" />
+    <Compile Include="States\MainMenu.cs" />
+    <Compile Include="Meth\AABB.cs" />
     <Compile Include="Renderer.cs" />
+    <Compile Include="States\State.cs" />
+    <Compile Include="TimerContainer.cs" />
+    <Compile Include="Utils\Extensions\ColorExtensions.cs" />
     <Compile Include="Utils\Extensions\FloatRectExtensions.cs" />
     <Compile Include="PackMgr.cs" />
     <Compile Include="ResourceMgr.cs" />
     <Compile Include="Utils\Extensions\TextExtensions.cs" />
+    <Compile Include="Misc\Cube3D.cs" />
+    <Compile Include="Misc\Point3D.cs" />
     <Compile Include="Utils\Scales.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\Utils.cs" />
+    <Compile Include="Utils\DictionarySet.cs" />
     <Compile Include="Utils\Extensions\VectorExtensions.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

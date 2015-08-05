@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using SFML.System;
 
-namespace Tq {
+namespace Tq.Meth {
 	struct AABB {
 		public float X, Y, W, H;
 
