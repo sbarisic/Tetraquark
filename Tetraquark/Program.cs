@@ -25,6 +25,7 @@ namespace Tq {
 
 		static Stopwatch GameWatch;
 
+		[STAThread]
 		static void Main() {
 			Console.Title = "Tetraquark Console";
 			Running = true;
@@ -55,14 +56,19 @@ namespace Tq {
 
 			RenderWindow RWind = new RenderWindow(new VideoMode((uint)Scales.XRes, (uint)Scales.YRes),
 				"Tetraquark", Styles.None);
+			RWind.SetKeyRepeatEnabled(false);
+
 			Renderer Rend = new Renderer(RWind);
-			Clock C = new Clock();
+			Stopwatch Clock = new Stopwatch();
+			Clock.Start();
 
 			while (Running) {
 				RWind.DispatchEvents();
-				while (C.ElapsedTime.AsSeconds() < 1.0f / 60)
+				while (Clock.ElapsedMilliseconds < 10)
 					;
-				Rend.Update(C.Restart().AsSeconds());
+				float Dt = (float)Clock.ElapsedMilliseconds / 1000;
+				Clock.Restart();
+				Rend.Update(Dt);
 				Rend.Draw(RWind);
 				RWind.Display();
 			}

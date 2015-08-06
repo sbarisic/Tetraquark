@@ -29,7 +29,7 @@ namespace Tq {
 			InsideUpdate = false;
 		}
 
-		public static void Add(TimerFunc T, float NextTime) {
+		public static void Add(TimerFunc T, float NextTime = 0) {
 			AllTimers.Add(new TimerEntry(T, NextTime));
 		}
 
