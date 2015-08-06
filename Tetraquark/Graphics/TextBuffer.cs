@@ -38,7 +38,7 @@ namespace Tq.Graphics {
 	}
 
 	class TextBuffer : Drawable {
-		static Shader TextBufferShader = Shader.FromString(@"
+		const string TextBufferVert = @"
 #version 110
 
 void main() {
@@ -46,7 +46,9 @@ void main() {
 	gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0;
 	gl_FrontColor = gl_Color;
 }
-", @"
+";
+
+		const string TextBufferFrag = @"
 #version 110
 
 uniform sampler2D font;
@@ -68,7 +70,8 @@ void main() {
 	//gl_FragColor = fontclr * vec4(fore.rgb, 1) + (1.0 - fontclr) * back;
 	gl_FragColor = mix(back, vec4(fore.rgb, 1), fontclr.r);
 }
-");
+";
+		static Shader TextBufferShader = null;
 
 		public int BufferWidth {
 			get {
@@ -124,6 +127,8 @@ void main() {
 			RT = new RenderTexture(W * (uint)CharW, H * (uint)CharH);
 			RT.Texture.Smooth = true;
 			Sprite = new Sprite(RT.Texture);
+			if (TextBufferShader == null)
+				TextBufferShader = Shader.FromString(TextBufferVert, TextBufferFrag);
 			TextStates = new RenderStates(TextBufferShader);
 
 			ScreenQuad = new Vertex[] {

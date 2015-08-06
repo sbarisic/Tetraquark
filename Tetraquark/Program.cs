@@ -25,7 +25,6 @@ namespace Tq {
 
 		static Stopwatch GameWatch;
 
-		[STAThread]
 		static void Main() {
 			Console.Title = "Tetraquark Console";
 			Running = true;
