@@ -148,13 +148,13 @@ namespace Tq.States {
 
 			CurrentMenu = new MenuEntry("Main Menu");
 			CurrentMenu.Add("New Game", () => {
-
+				Console.WriteLine("New Game!");
 			});
 			CurrentMenu.Add("Load Game", () => {
-			
+				Console.WriteLine("Load Game!");
 			});
 			CurrentMenu.Add("Settings", () => {
-			
+				Console.WriteLine("Settings!");
 			});
 			CurrentMenu.Add("Exit", () => Program.Running = false);
 
