@@ -22,6 +22,10 @@ uniform float blur; // 0.1
 uniform float chromatic; // 0.3
 uniform float lines; // 0.9
 
+float Rand(vec2 co) {
+	return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
 vec2 Barrel(vec2 coord) {
 	coord = coord - resolution / 2;
 	vec2 cc = coord - 0.5;
@@ -60,7 +64,7 @@ void main() {
 	vec4 Default = GetPixel((gl_TexCoord[0].xy * resolution).xy);
 	Default = vec4(MIX(Default, Blur(blur)).rgb, Default.a);
 	Default = Default * Scanlines(vec3(1.0), vec3(lines), 1.0);
-	gl_FragColor = Default * gl_Color;
+	gl_FragColor = (Default * gl_Color) + vec4(vec3(Rand(gl_TexCoord[0].xy) * 0.02), 0.0);
 }
 ");
 

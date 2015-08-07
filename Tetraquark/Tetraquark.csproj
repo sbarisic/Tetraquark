@@ -64,9 +64,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Graphics\TextBuffer.cs" />
+    <Compile Include="States\MenuEntry.cs" />
     <Compile Include="Utils\Bresenham.cs" />
     <Compile Include="Shaders\CRT.cs" />
-    <Compile Include="States\MainMenu.cs" />
+    <Compile Include="States\Menu.cs" />
     <Compile Include="Meth\AABB.cs" />
     <Compile Include="Renderer.cs" />
     <Compile Include="States\State.cs" />
