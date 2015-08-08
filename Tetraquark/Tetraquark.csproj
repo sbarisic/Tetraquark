@@ -61,24 +61,28 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="YamlSerializer">
+      <HintPath>..\ThirdParty\YamlSerializer\YamlSerializer.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Graphics\TextBuffer.cs" />
-    <Compile Include="States\MenuEntry.cs" />
+    <Compile Include="Menu\MenuEntry.cs" />
+    <Compile Include="Menu\Widgets.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Utils\Bresenham.cs" />
     <Compile Include="Shaders\CRT.cs" />
-    <Compile Include="States\Menu.cs" />
+    <Compile Include="States\MenuState.cs" />
     <Compile Include="Meth\AABB.cs" />
     <Compile Include="Renderer.cs" />
     <Compile Include="States\State.cs" />
-    <Compile Include="TimerContainer.cs" />
+    <Compile Include="Timer.cs" />
     <Compile Include="Utils\Extensions\ColorExtensions.cs" />
+    <Compile Include="Utils\Extensions\TextBufferExtensions.cs" />
     <Compile Include="Utils\Extensions\FloatRectExtensions.cs" />
     <Compile Include="PackMgr.cs" />
     <Compile Include="ResourceMgr.cs" />
     <Compile Include="Utils\Extensions\TextExtensions.cs" />
-    <Compile Include="Misc\Cube3D.cs" />
-    <Compile Include="Misc\Point3D.cs" />
     <Compile Include="Utils\Random.cs" />
     <Compile Include="Scales.cs" />
     <Compile Include="Program.cs" />

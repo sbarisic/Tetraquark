@@ -9,25 +9,25 @@ using SFML.System;
 using SFML.Graphics;
 using SFML.Window;
 using Tq.Graphics;
-using Tq.Misc;
+using Tq.Menu;
 
 namespace Tq.States {
-	class Menu : State {
+	class MenuState : State {
 		TextBuffer GUIText;
 
 		MenuEntry CurrentMenu, MainMenu, LoadUniverse, Constants;
 
-		public Menu(RenderTexture RTex) {
+		public MenuState(RenderTexture RTex) {
 			GUIText = new TextBuffer(80, 30);
 			GUIText.SetFontTexture(ResourceMgr.Get<Texture>("font"));
-			GUIText.Sprite.Scale = RTex.Size.ToVec2f().Divide(GUIText.Sprite.Texture.Size.ToVec2f()) - new Vector2f(.1f, .1f);
+			GUIText.Sprite.Scale = RTex.Size.ToVec2f().Divide(GUIText.Sprite.Texture.Size.ToVec2f());
 			GUIText.Sprite.Position = RTex.Texture.Size.ToVec2f() / 2;
 			GUIText.Sprite.Origin = GUIText.Sprite.Texture.Size.ToVec2f() / 2;
 
 			MainMenu = new MenuEntry("Main Menu")
 				.Add(new WidgetButton("Create Universe", () => {
 				}))
-				.Add(new WidgetButton("Load Universe", () => CurrentMenu = LoadUniverse))
+				.Add(new WidgetButton("Load Universe", () => CurrentMenu = LoadUniverse).Disable())
 				.Add(new WidgetButton("Universal Constants", () => CurrentMenu = Constants))
 				.Add(new WidgetButton("Terminate", () => Program.Running = false));
 
@@ -40,8 +40,17 @@ namespace Tq.States {
 				.Add(new WidgetButton("Back", BackToMainMenu));
 
 			Constants = new MenuEntry("Universal Constants")
-				.Add(new WidgetButton("Resolution", () => {
-				}))
+				.Add(new WidgetTextbox("Resolution X", Program.ResX.ToString(), 6, (S) => {
+					if (S.Length > 0)
+						Program.ResX = int.Parse(S);
+					GUIText.Print(0, 0, "Restart required for changes to take effect");
+				}, char.IsNumber))
+				.Add(new WidgetTextbox("Resolution Y", Program.ResY.ToString(), 6, (S) => {
+					if (S.Length > 0)
+						Program.ResY = int.Parse(S);
+					GUIText.Print(0, 0, "Restart required for changes to take effect");
+				}, char.IsNumber))
+				.Add(new WidgetCheckbox("Debug", Program.Debug, (B) => Program.Debug = B))
 				.Add(new WidgetButton("Back", BackToMainMenu));
 
 			CurrentMenu = MainMenu;
@@ -49,18 +58,26 @@ namespace Tq.States {
 		}
 
 		public override void OnKey(KeyEventArgs E, bool Pressed) {
-			Widget ActiveWidget = null;
+			Widget Selected = CurrentMenu.GetSelectedWidget();
 
-			if (E.Code == Keyboard.Key.Down) {
+			if (Selected != null && Selected.CaptureInput)
+				Selected.OnKey(E.Code, Pressed);
+			else if (E.Code == Keyboard.Key.Down) {
 				if (Pressed)
 					CurrentMenu.Selected++;
 			} else if (E.Code == Keyboard.Key.Up) {
 				if (Pressed)
 					CurrentMenu.Selected--;
-			} else if ((ActiveWidget = CurrentMenu.GetActiveWidget()) != null)
-				ActiveWidget.OnKey(E.Code, Pressed);
+			} else if (Selected != null)
+				Selected.OnKey(E.Code, Pressed);
 
 			CurrentMenu.DrawMenu(GUIText);
+		}
+
+		public override void OnTextEntered(TextEventArgs E) {
+			Widget Selected = CurrentMenu.GetSelectedWidget();
+			if (Selected != null && Selected.CaptureInput)
+				Selected.OnText(E.Unicode[0]);
 		}
 
 		public override void Update(float Dt) {

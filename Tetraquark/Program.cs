@@ -15,8 +15,6 @@ using View = SFML.Graphics.View;
 namespace Tq {
 	static class Program {
 		public static bool Running;
-		public static bool Debug;
-
 		public static float GameTime {
 			get {
 				return (float)GameWatch.ElapsedMilliseconds / 1000;
@@ -25,14 +23,26 @@ namespace Tq {
 
 		static Stopwatch GameWatch;
 
+		[Setting]
+		public static int ResX = (int)VideoMode.DesktopMode.Width - 100;
+		[Setting]
+		public static int ResY = (int)VideoMode.DesktopMode.Height - 100;
+		[Setting]
+		public static bool Debug = false;
+
 		[STAThread]
 		static void Main() {
 			Console.Title = "Tetraquark Console";
 			Running = true;
-			Debug = true;
+
+			const string ConfigFile = "cfg.yaml";
+			if (File.Exists(ConfigFile)) {
+				Console.WriteLine("Loading config file {0}", ConfigFile);
+				Settings.Load(File.ReadAllText(ConfigFile));
+			}
+
 			GameWatch = new Stopwatch();
 			GameWatch.Start();
-
 			PackMgr.Mount("Fonts.zip");
 			PackMgr.Mount("ConsoleFont.zip");
 
@@ -44,15 +54,16 @@ namespace Tq {
 					ResourceMgr.Register<Texture>(PackMgr.OpenFile(Files[i]), Path.GetFileNameWithoutExtension(Files[i]));
 			}
 
-			var Bounds = new Vector2f();
-			VideoMode Desktop = VideoMode.DesktopMode;
-			//Bounds = new Vector2f(Desktop.Width, Desktop.Height);
-			//Bounds = new Vector2f(Desktop.Width - 100, Desktop.Height - 100);
-			//Bounds = new Vector2f(1280, 720);	
-			//Bounds = new Vector2f(960, 540);
-			Bounds = new Vector2f(864, 486);
+			/*ResX = 1280;
+			ResY = 720;
 
-			Scales.Init(Bounds);
+			ResX = 960;
+			ResY = 540;
+
+			ResX = 864;
+			ResY = 486;*/
+
+			Scales.Init(new Vector2f(ResX, ResY));
 
 			RenderWindow RWind = new RenderWindow(new VideoMode((uint)Scales.XRes, (uint)Scales.YRes),
 				"Tetraquark", Styles.None);
@@ -73,6 +84,9 @@ namespace Tq {
 				RWind.Display();
 			}
 
+			RWind.Close();
+			Console.WriteLine("Flushing configs");
+			File.WriteAllText(ConfigFile, Settings.Save());
 			Environment.Exit(0);
 		}
 	}

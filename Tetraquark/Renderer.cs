@@ -90,7 +90,7 @@ namespace Tq {
 					States.Peek().OnResized(E);
 			};
 
-			PushState(new Menu(RTex));
+			PushState(new MenuState(RTex));
 		}
 
 		public void PushState(State State) {
