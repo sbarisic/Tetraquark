@@ -104,8 +104,8 @@ namespace Tq.Menu {
 			string Check = " ";
 			if (IsChecked)
 				Check = "X";
-			TBuffer.Print(X, Y, Txt, Fg, Bg);
-			TBuffer.Print(X + Txt.Length + 1, Y, "[" + Check + "]");
+			TBuffer.Print(X + 4, Y, Txt, Fg, Bg);
+			TBuffer.Print(X, Y, "[" + Check + "]");
 		}
 	}
 

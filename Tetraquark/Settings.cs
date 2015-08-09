@@ -41,9 +41,9 @@ namespace Tq {
 
 			ForeachSetting((F, A) => {
 				// HAX
-				Map[F.Name] = YamlNode.FromYaml(Serializer.Serialize(F.GetValue(null)))[0];
-			});
+				Map.Add(F.Name, YamlNode.FromYaml(Serializer.Serialize(F.GetValue(null)))[0]);
 
+			});
 			return Map.ToYaml();
 		}
 	}

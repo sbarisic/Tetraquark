@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using SFML.Window;
 using SFML.System;
 using SFML.Graphics;
+using Tq.Graphics;
 
 namespace Tq.States {
 	class State {
@@ -43,7 +44,7 @@ namespace Tq.States {
 		public virtual void Update(float Dt) {
 		}
 
-		public virtual void Draw(RenderTexture RT) {
+		public virtual void Draw(RenderSprite RT) {
 		}
 	}
 }

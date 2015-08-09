@@ -5,28 +5,42 @@ using System.Text;
 using System.Threading;
 using System.IO;
 
+using OpenTK.Graphics.OpenGL;
 using SFML.System;
 using SFML.Graphics;
 using SFML.Window;
+using PrimType = SFML.Graphics.PrimitiveType;
 using Tq.Graphics;
 using Tq.Menu;
 
 namespace Tq.States {
 	class MenuState : State {
 		TextBuffer GUIText;
-
 		MenuEntry CurrentMenu, MainMenu, LoadUniverse, Constants;
+		RenderSprite CRT, AAA, BBB;
 
-		public MenuState(RenderTexture RTex) {
+		Vertex[] ScreenQuad;
+
+		public MenuState(RenderSprite RTex) {
 			GUIText = new TextBuffer(80, 30);
 			GUIText.SetFontTexture(ResourceMgr.Get<Texture>("font"));
 			GUIText.Sprite.Scale = RTex.Size.ToVec2f().Divide(GUIText.Sprite.Texture.Size.ToVec2f());
 			GUIText.Sprite.Position = RTex.Texture.Size.ToVec2f() / 2;
 			GUIText.Sprite.Origin = GUIText.Sprite.Texture.Size.ToVec2f() / 2;
 
+			AAA = new RenderSprite(RTex.Size);
+			BBB = new RenderSprite(RTex.Size);
+			CRT = new RenderSprite(RTex.Size);
+
+			ScreenQuad = new Vertex[] {
+				new Vertex(new Vector2f(0, 0), Color.White, new Vector2f(0, 1)), 
+				new Vertex(new Vector2f(RTex.Size.X, 0), Color.White, new Vector2f(1, 1)),
+				new Vertex(new Vector2f(RTex.Size.X, RTex.Size.Y), Color.White, new Vector2f(1, 0)),
+				new Vertex(new Vector2f(0, RTex.Size.Y), Color.White, new Vector2f(0, 0)),
+			};
+
 			MainMenu = new MenuEntry("Main Menu")
-				.Add(new WidgetButton("Create Universe", () => {
-				}))
+				.Add(new WidgetButton("Create Universe", () => Renderer.PushState(new GameState(RTex))))
 				.Add(new WidgetButton("Load Universe", () => CurrentMenu = LoadUniverse).Disable())
 				.Add(new WidgetButton("Universal Constants", () => CurrentMenu = Constants))
 				.Add(new WidgetButton("Terminate", () => Program.Running = false));
@@ -55,6 +69,21 @@ namespace Tq.States {
 
 			CurrentMenu = MainMenu;
 			CurrentMenu.DrawMenu(GUIText);
+
+			int i = 0;
+
+			Timer.Add((O) => {
+				if (i++ >= 79)
+					i = 0;
+				for (int j = 0; j < 80; j++)
+					if (j == i)
+						GUIText[j, 0] = new TextBufferEntry(Color.White);
+					else
+						GUIText[j, 0] = new TextBufferEntry(Color.Black);
+
+				Timer.Repeat(Program.GameTime + 0.01f);
+				return null;
+			});
 		}
 
 		public override void OnKey(KeyEventArgs E, bool Pressed) {
@@ -84,16 +113,22 @@ namespace Tq.States {
 			Timer.Update(Program.GameTime);
 		}
 
-		public override void Draw(RenderTexture RT) {
+		public override void Draw(RenderSprite RT) {
 			RT.Clear(Color.Black);
-			Shader.Bind(Shaders.CRT);
-			Shaders.CRT.SetParameter("texture", GUIText.Sprite.Texture);
-			Shaders.CRT.SetParameter("resolution", GUIText.Sprite.Texture.Size.ToVec2f());
-			Shaders.CRT.SetParameter("blur", 0.1f);
-			Shaders.CRT.SetParameter("chromatic", 0.8f);
-			Shaders.CRT.SetParameter("lines", 0.9f);
-			RT.Draw(GUIText);
-			Shader.Bind(null);
+
+			CRT.Clear(Color.Transparent);
+			CRT.Draw(GUIText, Shaders.UseCRT(GUIText.Sprite.Texture, 0.1f, 0.8f, 0.9f, 0.015f));
+			CRT.Display();
+
+			BBB.Clear(Color.Transparent);
+			BBB.Draw(AAA);
+			BBB.Display();
+
+			AAA.Clear(Color.Transparent);
+			AAA.Draw(ScreenQuad, PrimType.Quads, Shaders.UsePhosphorGlow(BBB.Texture, CRT.Texture, 0.08f));
+			AAA.Display();
+
+			RT.Draw(AAA);
 		}
 	}
 }

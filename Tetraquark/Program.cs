@@ -7,6 +7,13 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Threading;
 
+using OpenTK;
+using OpenTK.Platform;
+using OpenTK.Graphics.OpenGL;
+using GraphicsMode = OpenTK.Graphics.GraphicsMode;
+using ColorFormat = OpenTK.Graphics.ColorFormat;
+using GraphicsContext = OpenTK.Graphics.GraphicsContext;
+using GfxCtxFlags = OpenTK.Graphics.GraphicsContextFlags;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -23,12 +30,23 @@ namespace Tq {
 
 		static Stopwatch GameWatch;
 
+		// 1280 x 720
+		// 960 x 540
+		// 864 x 486
 		[Setting]
-		public static int ResX = (int)VideoMode.DesktopMode.Width - 100;
+		public static int ResX = 960;
 		[Setting]
-		public static int ResY = (int)VideoMode.DesktopMode.Height - 100;
+		public static int ResY = 540;
 		[Setting]
 		public static bool Debug = false;
+		[Setting]
+		public static int BitsPerPixel = 32;
+		[Setting]
+		public static int DepthBits = 16;
+		[Setting]
+		public static int StencilBits = 16;
+		[Setting]
+		public static int Samples = 0;
 
 		[STAThread]
 		static void Main() {
@@ -54,22 +72,31 @@ namespace Tq {
 					ResourceMgr.Register<Texture>(PackMgr.OpenFile(Files[i]), Path.GetFileNameWithoutExtension(Files[i]));
 			}
 
-			/*ResX = 1280;
-			ResY = 720;
-
-			ResX = 960;
-			ResY = 540;
-
-			ResX = 864;
-			ResY = 486;*/
-
 			Scales.Init(new Vector2f(ResX, ResY));
 
-			RenderWindow RWind = new RenderWindow(new VideoMode((uint)Scales.XRes, (uint)Scales.YRes),
-				"Tetraquark", Styles.None);
+			// OpenTK
+			ToolkitOptions TOpt = ToolkitOptions.Default;
+			TOpt.Backend = PlatformBackend.PreferNative;
+			TOpt.EnableHighResolution = true;
+			Toolkit.Init(TOpt);
+			// SFML
+			VideoMode VMode = new VideoMode((uint)Scales.XRes, (uint)Scales.YRes, (uint)BitsPerPixel);
+			ContextSettings CSet = new ContextSettings((uint)DepthBits, (uint)StencilBits);
+			CSet.MajorVersion = 4;
+			CSet.MinorVersion = 2;
+			CSet.AntialiasingLevel = (uint)Samples;
+			RenderWindow RWind = new RenderWindow(VMode, "Tetraquark", Styles.None, CSet);
 			RWind.SetKeyRepeatEnabled(false);
+			// OpenTK
+			IWindowInfo WindInfo = Utilities.CreateWindowsWindowInfo(RWind.SystemHandle);
+			var GfxMode = new GraphicsMode(new ColorFormat(BitsPerPixel), DepthBits, StencilBits, Samples, new ColorFormat(0));
+			var GfxCtx = new GraphicsContext(GfxMode, WindInfo, (int)CSet.MajorVersion, (int)CSet.MinorVersion,
+				GfxCtxFlags.Default);
+			GfxCtx.MakeCurrent(WindInfo);
+			GfxCtx.LoadAll();
+			RWind.ResetGLStates();
 
-			Renderer Rend = new Renderer(RWind);
+			Renderer.Init(RWind);
 			Stopwatch Clock = new Stopwatch();
 			Clock.Start();
 
@@ -79,12 +106,13 @@ namespace Tq {
 					;
 				float Dt = (float)Clock.ElapsedMilliseconds / 1000;
 				Clock.Restart();
-				Rend.Update(Dt);
-				Rend.Draw(RWind);
+				Renderer.Update(Dt);
+				Renderer.Draw(RWind);
 				RWind.Display();
 			}
 
 			RWind.Close();
+			RWind.Dispose();
 			Console.WriteLine("Flushing configs");
 			File.WriteAllText(ConfigFile, Settings.Save());
 			Environment.Exit(0);

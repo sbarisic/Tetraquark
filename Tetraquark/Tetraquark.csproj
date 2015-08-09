@@ -37,6 +37,14 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\bin\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.Compatibility, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\bin\OpenTK.Compatibility.dll</HintPath>
+    </Reference>
     <Reference Include="sfmlnet-audio-2">
       <HintPath>..\packages\SFML.Net.2.2\lib\sfmlnet-audio-2.dll</HintPath>
     </Reference>
@@ -66,10 +74,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphics\HSVColor.cs" />
+    <Compile Include="Graphics\RenderSprite.cs" />
     <Compile Include="Graphics\TextBuffer.cs" />
     <Compile Include="Menu\MenuEntry.cs" />
     <Compile Include="Menu\Widgets.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Shaders\PhosphorGlow.cs" />
+    <Compile Include="States\GameState.cs" />
     <Compile Include="Utils\Bresenham.cs" />
     <Compile Include="Shaders\CRT.cs" />
     <Compile Include="States\MenuState.cs" />

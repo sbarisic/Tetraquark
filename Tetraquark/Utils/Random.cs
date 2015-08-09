@@ -15,5 +15,9 @@ namespace Tq {
 		public static int Random(int Min, int Max) {
 			return Rnd.Next(Min, Max);
 		}
+
+		public static byte RandomByte() {
+			return (byte)Rnd.Next(255);
+		}
 	}
 }

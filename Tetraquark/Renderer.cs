@@ -9,19 +9,18 @@ using SFML.System;
 using SFML.Graphics;
 using SFML.Window;
 using Tq.States;
+using Tq.Graphics;
 
 namespace Tq {
-	class Renderer {
-		RenderTexture RTex;
-		Sprite RTexSprite;
+	static class Renderer {
+		static RenderSprite RTgt;
 
-		Text FPSLabel;
-		Stack<State> States;
+		static Text FPSLabel;
+		static Stack<State> States;
 
-		public Renderer(Window Wind) {
+		public static void Init(Window Wind) {
 			States = new Stack<State>();
-			RTex = new RenderTexture((uint)Scales.XRes, (uint)Scales.YRes);
-			RTexSprite = new Sprite(RTex.Texture);
+			RTgt = new RenderSprite((int)Scales.XRes, (int)Scales.YRes);
 			FPSLabel = new Text("FPS: Unknown", ResourceMgr.Get<Font>("Inconsolata"), Scales.GetFontSize(16));
 			FPSLabel.Position = new Vector2f(0.01f * Scales.XRes, 0);
 
@@ -41,6 +40,10 @@ namespace Tq {
 			};
 
 			Wind.KeyPressed += (S, E) => {
+				if (E.Alt && E.Code == Keyboard.Key.F4) {
+					Program.Running = false;
+					return;
+				}
 				if (States.Count > 0)
 					States.Peek().OnKey(E, true);
 			};
@@ -90,18 +93,18 @@ namespace Tq {
 					States.Peek().OnResized(E);
 			};
 
-			PushState(new MenuState(RTex));
+			PushState(new MenuState(RTgt));
 		}
 
-		public void PushState(State State) {
+		public static void PushState(State State) {
 			States.Push(State);
 		}
 
-		public State PopState() {
+		public static State PopState() {
 			return States.Pop();
 		}
 
-		public void Update(float Dt) {
+		public static void Update(float Dt) {
 			if (Program.Debug)
 				FPSLabel.DisplayedString = "Fps: " + Math.Round(1.0f / Dt, 1) + "; Ms: " + Math.Round(Dt, 2);
 
@@ -109,12 +112,13 @@ namespace Tq {
 				States.Peek().Update(Dt);
 		}
 
-		public void Draw(RenderTarget RT) {
+		public static void Draw(RenderTarget RT) {
 			if (States.Count > 0)
-				States.Peek().Draw(RTex);
-			
-			RTex.Display();
-			RT.Draw(RTexSprite);
+				States.Peek().Draw(RTgt);
+			RTgt.Display();
+
+			RT.Clear(Color.Transparent);
+			RT.Draw(RTgt);
 			if (Program.Debug)
 				RT.Draw(FPSLabel);
 		}
