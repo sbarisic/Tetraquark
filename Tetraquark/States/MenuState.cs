@@ -69,21 +69,6 @@ namespace Tq.States {
 
 			CurrentMenu = MainMenu;
 			CurrentMenu.DrawMenu(GUIText);
-
-			int i = 0;
-
-			Timer.Add((O) => {
-				if (i++ >= 79)
-					i = 0;
-				for (int j = 0; j < 80; j++)
-					if (j == i)
-						GUIText[j, 0] = new TextBufferEntry(Color.White);
-					else
-						GUIText[j, 0] = new TextBufferEntry(Color.Black);
-
-				Timer.Repeat(Program.GameTime + 0.01f);
-				return null;
-			});
 		}
 
 		public override void OnKey(KeyEventArgs E, bool Pressed) {

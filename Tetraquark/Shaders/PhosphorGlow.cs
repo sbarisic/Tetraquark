@@ -31,7 +31,7 @@ void main() {
 	gl_FrontColor = gl_Color;
 }
 ", @"
-#version 110
+#version 120
 
 uniform sampler2D tex_a;
 uniform sampler2D tex_b;

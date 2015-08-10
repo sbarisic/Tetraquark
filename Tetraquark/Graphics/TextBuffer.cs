@@ -49,7 +49,7 @@ void main() {
 ";
 
 		const string TextBufferFrag = @"
-#version 110
+#version 120
 
 uniform sampler2D font;
 uniform sampler2D foredata;
@@ -60,9 +60,9 @@ uniform vec4 fontsizes;
 void main() {
 	vec4 fore = texture2D(foredata, gl_TexCoord[0].xy);
 	vec4 back = texture2D(backdata, gl_TexCoord[0].xy);
-	float char = 255.0f * fore.a;
+	float chr = 255.0f * fore.a;
 	
-	vec2 fontpos = vec2(floor(mod(char, fontsizes.z)) * fontsizes.x, floor(char / fontsizes.w) * fontsizes.y);
+	vec2 fontpos = vec2(floor(mod(chr, fontsizes.z)) * fontsizes.x, floor(chr / fontsizes.w) * fontsizes.y);
 	vec2 offset = vec2(mod(floor(gl_TexCoord[0].x * (buffersize.x * fontsizes.x)), fontsizes.x),
 					   mod(floor(gl_TexCoord[0].y * (buffersize.y * fontsizes.y)) + 0.5f, fontsizes.y));
 

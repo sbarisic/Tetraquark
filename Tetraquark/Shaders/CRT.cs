@@ -35,7 +35,7 @@ void main() {
 	gl_FrontColor = gl_Color;
 }
 ", @"
-#version 110
+#version 120
 
 uniform sampler2D texture;
 uniform vec2 resolution;
@@ -49,10 +49,10 @@ float Rand(vec2 co) {
 }
 
 vec2 Barrel(vec2 Coord) {
-	Coord = Coord - resolution / 2;
+	Coord = Coord - resolution / 2.0;
 	vec2 CoordCenter = Coord - 0.5;
 	float Dist = dot(CoordCenter, CoordCenter);
-	return (Coord + CoordCenter * Dist * 0.0000005) + resolution / 2;
+	return (Coord + CoordCenter * Dist * 0.0000005) + resolution / 2.0;
 }
 
 vec4 GetPixel(vec2 Pos) {
