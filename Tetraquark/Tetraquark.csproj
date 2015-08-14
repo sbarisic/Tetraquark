@@ -75,12 +75,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\PhysicsEnt.cs" />
+    <Compile Include="Entities\StarshipEnt.cs" />
+    <Compile Include="Game\Camera.cs" />
+    <Compile Include="Game\Engine.cs" />
     <Compile Include="Graphics\HSVColor.cs" />
     <Compile Include="Graphics\RenderSprite.cs" />
     <Compile Include="Graphics\TextBuffer.cs" />
+    <Compile Include="Graphics\VertexShapes.cs" />
     <Compile Include="Menu\MenuEntry.cs" />
     <Compile Include="Menu\Widgets.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Shaders\Starfield.cs" />
     <Compile Include="Shaders\PhosphorGlow.cs" />
     <Compile Include="States\GameState.cs" />
     <Compile Include="Utils\Bresenham.cs" />
@@ -91,6 +97,7 @@
     <Compile Include="States\State.cs" />
     <Compile Include="Timer.cs" />
     <Compile Include="Utils\Extensions\ColorExtensions.cs" />
+    <Compile Include="Utils\Extensions\RenderStatesExtensions.cs" />
     <Compile Include="Utils\Extensions\TextBufferExtensions.cs" />
     <Compile Include="Utils\Extensions\FloatRectExtensions.cs" />
     <Compile Include="PackMgr.cs" />

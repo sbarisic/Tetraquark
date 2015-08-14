@@ -40,6 +40,8 @@ namespace Tq {
 		[Setting]
 		public static bool Debug = false;
 		[Setting]
+		public static bool Border = true;
+		[Setting]
 		public static int BitsPerPixel = 32;
 		[Setting]
 		public static int DepthBits = 16;
@@ -85,7 +87,11 @@ namespace Tq {
 			CSet.MajorVersion = 4;
 			CSet.MinorVersion = 2;
 			CSet.AntialiasingLevel = (uint)Samples;
-			RenderWindow RWind = new RenderWindow(VMode, "Tetraquark", Styles.None, CSet);
+			Styles S = Styles.None;
+			if (Border)
+				S |= Styles.Titlebar | Styles.Close;
+			RenderWindow RWind = new RenderWindow(VMode, "Tetraquark", S, CSet);
+			RWind.Closed += (Snd, E) => Running = false;
 			RWind.SetKeyRepeatEnabled(false);
 			// OpenTK
 			IWindowInfo WindInfo = Utilities.CreateWindowsWindowInfo(RWind.SystemHandle);
@@ -95,6 +101,8 @@ namespace Tq {
 			GfxCtx.MakeCurrent(WindInfo);
 			GfxCtx.LoadAll();
 			RWind.ResetGLStates();
+
+			//GL.Enable(EnableCap.FramebufferSrgb);
 
 			Renderer.Init(RWind);
 			Stopwatch Clock = new Stopwatch();

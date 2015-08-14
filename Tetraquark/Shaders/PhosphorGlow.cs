@@ -7,10 +7,29 @@ using System.Threading.Tasks;
 using SFML.System;
 using SFML.Graphics;
 using SFML.Window;
+using Tq.Graphics;
 
 namespace Tq {
 	static partial class Shaders {
 		static RenderStates PhosphorGlowStates;
+		static RenderSprite A, B;
+
+		public static RenderSprite DrawPhosphorGlow(Texture Tex, float Sub = 0.1f) {
+			if (A == null) {
+				A = new RenderSprite(Tex.Size);
+				B = new RenderSprite(Tex.Size);
+			}
+
+			B.Clear(Color.Transparent);
+			B.Draw(A);
+			B.Display();
+
+			A.Clear(Color.Transparent);
+			A.Draw(VertexShapes.Quad, PrimitiveType.Quads,
+				Shaders.UsePhosphorGlow(B.Texture, Tex, Sub).Scale(Tex.Size.ToVec2f()));
+			A.Display();
+			return A;
+		}
 
 		public static RenderStates UsePhosphorGlow(Texture TexA, Texture TexB, float Sub) {
 			if (PhosphorGlowStates.Shader == null)

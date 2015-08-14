@@ -19,8 +19,6 @@ namespace Tq.States {
 		MenuEntry CurrentMenu, MainMenu, LoadUniverse, Constants;
 		RenderSprite CRT, AAA, BBB;
 
-		Vertex[] ScreenQuad;
-
 		public MenuState(RenderSprite RTex) {
 			GUIText = new TextBuffer(80, 30);
 			GUIText.SetFontTexture(ResourceMgr.Get<Texture>("font"));
@@ -31,13 +29,6 @@ namespace Tq.States {
 			AAA = new RenderSprite(RTex.Size);
 			BBB = new RenderSprite(RTex.Size);
 			CRT = new RenderSprite(RTex.Size);
-
-			ScreenQuad = new Vertex[] {
-				new Vertex(new Vector2f(0, 0), Color.White, new Vector2f(0, 1)), 
-				new Vertex(new Vector2f(RTex.Size.X, 0), Color.White, new Vector2f(1, 1)),
-				new Vertex(new Vector2f(RTex.Size.X, RTex.Size.Y), Color.White, new Vector2f(1, 0)),
-				new Vertex(new Vector2f(0, RTex.Size.Y), Color.White, new Vector2f(0, 0)),
-			};
 
 			MainMenu = new MenuEntry("Main Menu")
 				.Add(new WidgetButton("Create Universe", () => Renderer.PushState(new GameState(RTex))))
@@ -65,6 +56,7 @@ namespace Tq.States {
 					GUIText.Print(0, 0, "Restart required for changes to take effect");
 				}, char.IsNumber))
 				.Add(new WidgetCheckbox("Debug", Program.Debug, (B) => Program.Debug = B))
+							.Add(new WidgetCheckbox("Border", Program.Border, (B) => Program.Border = B))
 				.Add(new WidgetButton("Back", BackToMainMenu));
 
 			CurrentMenu = MainMenu;
@@ -105,15 +97,17 @@ namespace Tq.States {
 			CRT.Draw(GUIText, Shaders.UseCRT(GUIText.Sprite.Texture, 0.1f, 0.8f, 0.9f, 0.015f));
 			CRT.Display();
 
-			BBB.Clear(Color.Transparent);
+			RT.Draw(Shaders.DrawPhosphorGlow(CRT.Texture));
+			/*BBB.Clear(Color.Transparent);
 			BBB.Draw(AAA);
 			BBB.Display();
 
 			AAA.Clear(Color.Transparent);
-			AAA.Draw(ScreenQuad, PrimType.Quads, Shaders.UsePhosphorGlow(BBB.Texture, CRT.Texture, 0.08f));
+			AAA.Draw(VertexShapes.Quad, PrimType.Quads,
+				Shaders.UsePhosphorGlow(BBB.Texture, CRT.Texture, 0.08f).Scale(RT.Size.ToVec2f()));
 			AAA.Display();
-
-			RT.Draw(AAA);
+			
+			RT.Draw(AAA);*/
 		}
 	}
 }

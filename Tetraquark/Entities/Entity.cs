@@ -12,8 +12,15 @@ using Tq.Graphics;
 
 namespace Tq.Entities {
 	class Entity {
+		public float NextThink;
+		public float LastThink;
 
-		public virtual void Update(float Dt) {
+		public Entity() {
+			LastThink = Program.GameTime;
+		}
+
+		public virtual float Update(float Dt) {
+			return 10;
 		}
 
 		public virtual void Draw(RenderSprite RT) {
