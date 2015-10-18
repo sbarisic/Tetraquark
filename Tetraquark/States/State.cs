@@ -11,6 +11,12 @@ using Tq.Graphics;
 
 namespace Tq.States {
 	class State {
+		public virtual void OnActivated() {
+		}
+
+		public virtual void OnDeactivated() {
+		}
+
 		public virtual void OnClosed() {
 		}
 

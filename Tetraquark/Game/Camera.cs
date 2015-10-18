@@ -8,22 +8,26 @@ using SFML.Graphics;
 using SFML.System;
 
 namespace Tq.Game {
-	static class Camera {
-		static View V;
-		static bool Dirty;
+	class Camera {
+		View V;
+		bool Dirty;
 
-		static Vector2f Pos, Res;
-		static float Rot, Zm;
+		Vector2f Pos, Res;
+		float Rot, Zm;
 
-		static Camera() {
+		public Camera() {
 			V = new View();
+			Reset();
+		}
+
+		public void Reset() {
 			Position = new Vector2f(0, 0);
-			Res = new Vector2f(0, 0);
+			Resolution = new Vector2f(0, 0);
 			Zoom = 1;
 			Rotation = 0;
 		}
 
-		public static Vector2f Resolution {
+		public Vector2f Resolution {
 			get {
 				return Res;
 			}
@@ -35,7 +39,7 @@ namespace Tq.Game {
 			}
 		}
 
-		public static Vector2f Position {
+		public Vector2f Position {
 			get {
 				return Pos;
 			}
@@ -47,7 +51,7 @@ namespace Tq.Game {
 			}
 		}
 
-		public static float Rotation {
+		public float Rotation {
 			get {
 				return Rot;
 			}
@@ -59,7 +63,7 @@ namespace Tq.Game {
 			}
 		}
 
-		public static float Zoom {
+		public float Zoom {
 			get {
 				return Zm;
 			}
@@ -71,16 +75,16 @@ namespace Tq.Game {
 			}
 		}
 
-		public static View ToView() {
-			if (Dirty) {
-				Dirty = false;
-				V.Reset(new FloatRect(new Vector2f(0, 0), Res));
-				V.Center = new Vector2f(0, 0);
-				V.Move(Pos);
-				V.Rotation = Rot;
-				V.Zoom(Zm);
+		public static implicit operator View(Camera C) {
+			if (C.Dirty) {
+				C.Dirty = false;
+				C.V.Reset(new FloatRect(new Vector2f(0, 0), C.Res));
+				C.V.Center = new Vector2f(0, 0);
+				C.V.Move(C.Pos);
+				C.V.Rotation = C.Rot;
+				C.V.Zoom(C.Zm);
 			}
-			return V;
+			return C.V;
 		}
 	}
 }

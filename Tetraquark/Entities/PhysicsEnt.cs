@@ -64,7 +64,7 @@ namespace Tq.Entities {
 				}
 			}
 
-			return 1.0f / 60;
+			return 1.0f / 60 - Dt;
 		}
 	}
 }

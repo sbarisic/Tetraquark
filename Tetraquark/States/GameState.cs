@@ -17,12 +17,25 @@ namespace Tq.States {
 	class GameState : State {
 		RenderSprite WorldRT;
 
-		public GameState(RenderSprite RTex) {
-			WorldRT = new RenderSprite(RTex.Size);
-			Camera.Resolution = RTex.Size.ToVec2f();
+		public GameState() {
+			WorldRT = new RenderSprite(Renderer.Screen.Size);
+			Engine.ActiveCamera = new Camera();
+			Engine.ActiveCamera.Resolution = Renderer.Screen.Size.ToVec2f();
+
+			Entity[] Ents = Engine.GetAllEntities();
+			for (int i = 0; i < Ents.Length; i++)
+				Engine.RemoveEntity(Ents[i]);
 
 			StarshipEnt Player = new StarshipEnt();
 			Engine.SpawnEntity(Player);
+		}
+
+		public override void OnKey(KeyEventArgs E, bool Pressed) {
+			if (!Pressed)
+				return;
+
+			if (E.Code == Keyboard.Key.Escape)
+				Renderer.PushState(new MenuState());
 		}
 
 		public override void Update(float Dt) {
@@ -34,10 +47,11 @@ namespace Tq.States {
 			RT.Clear(Color.Cyan);
 			WorldRT.Clear(Color.Transparent);
 			WorldRT.Draw(VertexShapes.Quad, PrimType.Quads,
-				Shaders.UseStarfield(Camera.Position, RT.Size.ToVec2f()).Scale(WorldRT.Size.ToVec2f()));
+				Shaders.UseStarfield(Engine.ActiveCamera.Position, Engine.ActiveCamera.Rotation, RT.Size.ToVec2f())
+				.Scale(WorldRT.Size.ToVec2f()));
 			WorldRT.Draw(Shaders.DrawPhosphorGlow(WorldRT.Texture, 0.02f));
 
-			WorldRT.SetView(Camera.ToView());
+			WorldRT.SetView(Engine.ActiveCamera);
 			for (int i = 0; i < Engine.Entities.Count; i++)
 				Engine.Entities[i].Draw(WorldRT);
 			WorldRT.SetView(WorldRT.DefaultView);

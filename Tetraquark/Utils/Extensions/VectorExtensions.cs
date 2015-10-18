@@ -54,5 +54,9 @@ namespace Tq {
 		public static Vector2f Multiply(this Vector2f V, Vector2f V2) {
 			return new Vector2f(V.X * V2.X, V.Y * V2.Y);
 		}
+
+		public static float Angle(this Vector2f Start, Vector2f End) {
+			return (float)(Math.Atan2(End.Y - Start.Y, End.X - Start.X) * 180 / Math.PI);
+		}
 	}
 }

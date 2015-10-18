@@ -9,9 +9,14 @@ using Tq.Entities;
 namespace Tq.Game {
 	static class Engine {
 		public static List<Entity> Entities;
+		public static Camera ActiveCamera;
 
 		static Engine() {
 			Entities = new List<Entity>();
+		}
+
+		public static Entity[] GetAllEntities() {
+			return Entities.ToArray();
 		}
 
 		public static void SpawnEntity(Entity E) {

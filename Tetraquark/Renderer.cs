@@ -13,14 +13,14 @@ using Tq.Graphics;
 
 namespace Tq {
 	static class Renderer {
-		static RenderSprite RTgt;
+		public static RenderSprite Screen;
 
 		static Text FPSLabel;
 		static Stack<State> States;
 
 		public static void Init(Window Wind) {
 			States = new Stack<State>();
-			RTgt = new RenderSprite((int)Scales.XRes, (int)Scales.YRes);
+			Screen = new RenderSprite((int)Scales.XRes, (int)Scales.YRes);
 			FPSLabel = new Text("FPS: Unknown", ResourceMgr.Get<Font>("Inconsolata"), Scales.GetFontSize(16));
 			FPSLabel.Position = new Vector2f(0.01f * Scales.XRes, 0);
 
@@ -93,15 +93,26 @@ namespace Tq {
 					States.Peek().OnResized(E);
 			};
 
-			PushState(new MenuState(RTgt));
+			PushState(new MenuState());
 		}
 
 		public static void PushState(State State) {
+			if (CountStates() > 0)
+				States.Peek().OnDeactivated();
 			States.Push(State);
+			State.OnActivated();
 		}
 
 		public static State PopState() {
-			return States.Pop();
+			State S = States.Pop();
+			S.OnDeactivated();
+			if (CountStates() > 0)
+				States.Peek().OnActivated();
+			return S;
+		}
+
+		public static int CountStates() {
+			return States.Count;
 		}
 
 		public static void Update(float Dt) {
@@ -114,11 +125,11 @@ namespace Tq {
 
 		public static void Draw(RenderTarget RT) {
 			if (States.Count > 0)
-				States.Peek().Draw(RTgt);
-			RTgt.Display();
+				States.Peek().Draw(Screen);
+			Screen.Display();
 
 			RT.Clear(Color.Transparent);
-			RT.Draw(RTgt);
+			RT.Draw(Screen);
 			if (Program.Debug)
 				RT.Draw(FPSLabel);
 		}

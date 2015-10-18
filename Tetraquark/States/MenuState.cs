@@ -19,19 +19,23 @@ namespace Tq.States {
 		MenuEntry CurrentMenu, MainMenu, LoadUniverse, Constants;
 		RenderSprite CRT, AAA, BBB;
 
-		public MenuState(RenderSprite RTex) {
+		public MenuState() {
 			GUIText = new TextBuffer(80, 30);
 			GUIText.SetFontTexture(ResourceMgr.Get<Texture>("font"));
-			GUIText.Sprite.Scale = RTex.Size.ToVec2f().Divide(GUIText.Sprite.Texture.Size.ToVec2f());
-			GUIText.Sprite.Position = RTex.Texture.Size.ToVec2f() / 2;
+			GUIText.Sprite.Scale = Renderer.Screen.Size.ToVec2f().Divide(GUIText.Sprite.Texture.Size.ToVec2f());
+			GUIText.Sprite.Position = Renderer.Screen.Texture.Size.ToVec2f() / 2;
 			GUIText.Sprite.Origin = GUIText.Sprite.Texture.Size.ToVec2f() / 2;
 
-			AAA = new RenderSprite(RTex.Size);
-			BBB = new RenderSprite(RTex.Size);
-			CRT = new RenderSprite(RTex.Size);
+			AAA = new RenderSprite(Renderer.Screen.Size);
+			BBB = new RenderSprite(Renderer.Screen.Size);
+			CRT = new RenderSprite(Renderer.Screen.Size);
 
-			MainMenu = new MenuEntry("Main Menu")
-				.Add(new WidgetButton("Create Universe", () => Renderer.PushState(new GameState(RTex))))
+			MainMenu = new MenuEntry("Main Menu");
+			if (Renderer.CountStates() > 0)
+				MainMenu.Add(new WidgetButton("Continue Universe", () => Renderer.PopState()));
+
+			MainMenu
+				.Add(new WidgetButton("Create Universe", () => Renderer.PushState(new GameState())))
 				.Add(new WidgetButton("Load Universe", () => CurrentMenu = LoadUniverse).Disable())
 				.Add(new WidgetButton("Universal Constants", () => CurrentMenu = Constants))
 				.Add(new WidgetButton("Terminate", () => Program.Running = false));
@@ -98,16 +102,6 @@ namespace Tq.States {
 			CRT.Display();
 
 			RT.Draw(Shaders.DrawPhosphorGlow(CRT.Texture));
-			/*BBB.Clear(Color.Transparent);
-			BBB.Draw(AAA);
-			BBB.Display();
-
-			AAA.Clear(Color.Transparent);
-			AAA.Draw(VertexShapes.Quad, PrimType.Quads,
-				Shaders.UsePhosphorGlow(BBB.Texture, CRT.Texture, 0.08f).Scale(RT.Size.ToVec2f()));
-			AAA.Display();
-			
-			RT.Draw(AAA);*/
 		}
 	}
 }
