@@ -63,8 +63,7 @@ namespace Tq {
 
 			GameWatch = new Stopwatch();
 			GameWatch.Start();
-			PackMgr.Mount("Fonts.zip");
-			PackMgr.Mount("ConsoleFont.zip");
+			PackMgr.Mount("Default.zip");
 
 			string[] Files = PackMgr.GetFiles();
 			for (int i = 0; i < Files.Length; i++) {

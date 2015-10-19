@@ -13,7 +13,7 @@
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +24,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\bin\</OutputPath>
@@ -43,6 +43,9 @@
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenTK.1.1.1589.5942\lib\NET40\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="Physics">
+      <HintPath>..\packages\Physics.1.0.0\lib\net40\Physics.dll</HintPath>
     </Reference>
     <Reference Include="sfmlnet-audio-2">
       <HintPath>..\packages\SFML.Net.2.2\lib\sfmlnet-audio-2.dll</HintPath>
@@ -73,11 +76,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\PhysicsBox.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\PhysicsEnt.cs" />
     <Compile Include="Entities\StarshipEnt.cs" />
     <Compile Include="Game\Camera.cs" />
+    <Compile Include="Game\Constants.cs" />
     <Compile Include="Game\Engine.cs" />
+    <Compile Include="Game\Phys.cs" />
     <Compile Include="Graphics\HSVColor.cs" />
     <Compile Include="Graphics\RenderSprite.cs" />
     <Compile Include="Graphics\TextBuffer.cs" />
@@ -96,6 +102,7 @@
     <Compile Include="States\State.cs" />
     <Compile Include="Timer.cs" />
     <Compile Include="Utils\Extensions\ColorExtensions.cs" />
+    <Compile Include="Utils\Extensions\PhysicsExtensions.cs" />
     <Compile Include="Utils\Extensions\FloatExtensions.cs" />
     <Compile Include="Utils\Extensions\RenderStatesExtensions.cs" />
     <Compile Include="Utils\Extensions\TextBufferExtensions.cs" />

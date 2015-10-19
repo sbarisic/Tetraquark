@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using ChipmunkSharp;
+using Tq.Game;
 using SFML.System;
 
 namespace Tq.Entities {
