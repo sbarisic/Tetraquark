@@ -4,10 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using ChipmunkSharp;
 using SFML.System;
 
 namespace Tq {
 	static class VectorExtensions {
+		public static cpVect ToCpVect(this Vector2f V) {
+			return new cpVect(V.X, V.Y);
+		}
+
+		public static Vector2f ToVec2f(this cpVect V) {
+			return new Vector2f(V.x, V.y);
+		}
+
 		public static Vector2f ToVec2f(this Vector2u V) {
 			return new Vector2f(V.X, V.Y);
 		}

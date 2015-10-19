@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using ChipmunkSharp;
 using OpenTK.Graphics.OpenGL;
 using SFML.System;
 using SFML.Graphics;
@@ -22,12 +23,23 @@ namespace Tq.States {
 			Engine.ActiveCamera = new Camera();
 			Engine.ActiveCamera.Resolution = Renderer.Screen.Size.ToVec2f();
 
+			Engine.Space = new cpSpace();
+			Engine.Space.CollisionEnabled = true;
+			Engine.Space.SetIterations(60);
+			Engine.Space.SetCollisionSlop(0.5f);
+			Engine.Space.SetSleepTimeThreshold(0.5f);
+
 			Entity[] Ents = Engine.GetAllEntities();
 			for (int i = 0; i < Ents.Length; i++)
 				Engine.RemoveEntity(Ents[i]);
 
 			StarshipEnt Player = new StarshipEnt();
+			Player.Position = new Vector2f(100, 0);
 			Engine.SpawnEntity(Player);
+
+			StarshipEnt Player2 = new StarshipEnt();
+			Player2.Position = new Vector2f(-100, 0);
+			Engine.SpawnEntity(Player2);
 		}
 
 		public override void OnKey(KeyEventArgs E, bool Pressed) {

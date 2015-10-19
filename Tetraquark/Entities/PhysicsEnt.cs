@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using ChipmunkSharp;
 using SFML.System;
 
 namespace Tq.Entities {
 	class PhysicsEnt : Entity {
+		internal cpBody Body;
+		internal cpShape Shape;
+
 		public PhysicsEnt() {
-			LinearDamping = .98f;
-			AngularDamping = .98f;
 		}
 
 		public virtual bool Frozen {
@@ -19,52 +21,39 @@ namespace Tq.Entities {
 		}
 
 		public virtual Vector2f Position {
-			get;
-			set;
+			get {
+				return Body.GetPosition().ToVec2f();
+			}
+			set {
+				Body.SetPosition(value.ToCpVect());
+			}
 		}
 
 		public virtual float Angle {
-			get;
-			set;
+			get {
+				return Body.GetAngle().ToDeg();
+			}
+			set {
+				Body.SetAngle(value.ToRad());
+			}
 		}
 
 		public virtual Vector2f LinearVelocity {
-			get;
-			set;
+			get {
+				return Body.GetVelocity().ToVec2f();
+			}
+			set {
+				Body.SetVelocity(value.ToCpVect());
+			}
 		}
 
 		public virtual float AngularVelocity {
-			get;
-			set;
-		}
-
-		public virtual float LinearDamping {
-			get;
-			set;
-		}
-
-		public virtual float AngularDamping {
-			get;
-			set;
-		}
-
-		public override float Update(float Dt) {
-			if (!Frozen) {
-				if (LinearVelocity.X != 0 || LinearVelocity.Y != 0) {
-					Position += LinearVelocity * Dt;
-					LinearVelocity *= LinearDamping;
-					if (Math.Abs(LinearVelocity.X) < 0.01 && Math.Abs(LinearVelocity.Y) < 0.01)
-						LinearVelocity = new Vector2f(0, 0);
-				}
-				if (AngularVelocity != 0) {
-					Angle += AngularVelocity * Dt;
-					AngularVelocity *= AngularDamping;
-					if (Math.Abs(AngularVelocity) < 0.01)
-						AngularVelocity = 0;
-				}
+			get {
+				return Body.GetAngularVelocity().ToDeg();
 			}
-
-			return 1.0f / 60 - Dt;
+			set {
+				Body.SetAngularVelocity(value.ToRad());
+			}
 		}
 	}
 }

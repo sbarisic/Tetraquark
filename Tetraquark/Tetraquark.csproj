@@ -37,13 +37,12 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+    <Reference Include="ChipmunkSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\bin\OpenTK.dll</HintPath>
+      <HintPath>..\..\ChipmunkSharp\src\ChipmunkSharp\win32\bin\Release\ChipmunkSharp.dll</HintPath>
     </Reference>
-    <Reference Include="OpenTK.Compatibility, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\bin\OpenTK.Compatibility.dll</HintPath>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenTK.1.1.1589.5942\lib\NET40\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="sfmlnet-audio-2">
       <HintPath>..\packages\SFML.Net.2.2\lib\sfmlnet-audio-2.dll</HintPath>
@@ -97,6 +96,7 @@
     <Compile Include="States\State.cs" />
     <Compile Include="Timer.cs" />
     <Compile Include="Utils\Extensions\ColorExtensions.cs" />
+    <Compile Include="Utils\Extensions\FloatExtensions.cs" />
     <Compile Include="Utils\Extensions\RenderStatesExtensions.cs" />
     <Compile Include="Utils\Extensions\TextBufferExtensions.cs" />
     <Compile Include="Utils\Extensions\FloatRectExtensions.cs" />
