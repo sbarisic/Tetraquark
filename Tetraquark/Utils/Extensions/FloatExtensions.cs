@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using ChipmunkSharp;
 using SFML.System;
+using FarseerPhysics;
 
 namespace Tq {
 	static class FloatExtensions {
@@ -15,6 +15,14 @@ namespace Tq {
 
 		public static float ToRad(this float Deg) {
 			return (float)(Deg * Math.PI / 180.0);
+		}
+
+		public static float ToSimUnits(this float F) {
+			return ConvertUnits.ToSimUnits(F);
+		}
+
+		public static float ToDisplayUnits(this float F) {
+			return ConvertUnits.ToDisplayUnits(F);
 		}
 	}
 }

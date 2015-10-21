@@ -37,9 +37,8 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ChipmunkSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ChipmunkSharp\src\ChipmunkSharp\win32\bin\Release\ChipmunkSharp.dll</HintPath>
+    <Reference Include="FarseerPhysics">
+      <HintPath>..\packages\FarseerPhysics.3.5.0\lib\NET40\FarseerPhysics.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenTK.1.1.1589.5942\lib\NET40\OpenTK.dll</HintPath>
@@ -79,17 +78,19 @@
     <Compile Include="Entities\PhysicsBox.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\PhysicsEnt.cs" />
-    <Compile Include="Entities\StarshipEnt.cs" />
     <Compile Include="Game\Camera.cs" />
     <Compile Include="Game\Constants.cs" />
     <Compile Include="Game\Engine.cs" />
-    <Compile Include="Game\Phys.cs" />
+    <Compile Include="Game\Phys\Constraints.cs" />
+    <Compile Include="Game\Phys\Querying.cs" />
+    <Compile Include="Game\Phys\Phys.cs" />
     <Compile Include="Graphics\HSVColor.cs" />
     <Compile Include="Graphics\RenderSprite.cs" />
     <Compile Include="Graphics\TextBuffer.cs" />
     <Compile Include="Graphics\VertexShapes.cs" />
     <Compile Include="Menu\MenuEntry.cs" />
     <Compile Include="Menu\Widgets.cs" />
+    <Compile Include="Meth\RayHit.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Shaders\Starfield.cs" />
     <Compile Include="Shaders\PhosphorGlow.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="States\State.cs" />
     <Compile Include="Timer.cs" />
     <Compile Include="Utils\Extensions\ColorExtensions.cs" />
+    <Compile Include="Utils\Extensions\PhysEngineExtensions.cs" />
     <Compile Include="Utils\Extensions\PhysicsExtensions.cs" />
     <Compile Include="Utils\Extensions\FloatExtensions.cs" />
     <Compile Include="Utils\Extensions\RenderStatesExtensions.cs" />

@@ -4,17 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using ChipmunkSharp;
+using FarseerPhysics;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
 using SFML.System;
+using Microsoft.Xna.Framework;
 
 namespace Tq {
 	static class VectorExtensions {
-		public static cpVect ToCpVect(this Vector2f V) {
-			return new cpVect(V.X, V.Y);
+		public static Vector2 ToVec(this Vector2f V) {
+			return new Vector2(V.X, V.Y);
 		}
 
-		public static Vector2f ToVec2f(this cpVect V) {
-			return new Vector2f(V.x, V.y);
+		public static Vector2f ToVec(this Vector2 V) {
+			return new Vector2f(V.X, V.Y);
+		}
+
+		public static Vector2f ToSimUnits(this Vector2f V) {
+			return new Vector2f(V.X.ToSimUnits(), V.Y.ToSimUnits());
+		}
+
+		public static Vector2f ToDisplayUnits(this Vector2f V) {
+			return new Vector2f(V.X.ToDisplayUnits(), V.Y.ToDisplayUnits());
 		}
 
 		public static Vector2f ToVec2f(this Vector2u V) {
@@ -65,7 +76,7 @@ namespace Tq {
 		}
 
 		public static float Angle(this Vector2f Start, Vector2f End) {
-			return (float)(Math.Atan2(End.Y - Start.Y, End.X - Start.X) * 180 / Math.PI);
+			return (float)Math.Atan2(End.Y - Start.Y, End.X - Start.X);
 		}
 	}
 }

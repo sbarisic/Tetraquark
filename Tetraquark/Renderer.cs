@@ -10,6 +10,7 @@ using SFML.Graphics;
 using SFML.Window;
 using Tq.States;
 using Tq.Graphics;
+using Tq.Game;
 
 namespace Tq {
 	static class Renderer {
