@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tetraquark2", "Tetraquark2.csproj", "{AD604D46-D2B1-4CCB-BAE6-17F2F5279991}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AD604D46-D2B1-4CCB-BAE6-17F2F5279991}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD604D46-D2B1-4CCB-BAE6-17F2F5279991}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD604D46-D2B1-4CCB-BAE6-17F2F5279991}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD604D46-D2B1-4CCB-BAE6-17F2F5279991}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {329352EE-5F97-4A9C-99CD-1F0D5AED5467}
+	EndGlobalSection
+EndGlobal
