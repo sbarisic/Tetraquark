@@ -1,7 +1,22 @@
-﻿namespace Tetraquark2 {
-	internal class Program {
+﻿using System.Diagnostics;
+
+using Tetraquark2.Engine;
+using Tetraquark2.Gfx;
+
+namespace Tetraquark2 {
+	static class Program {
+		static GameEngine Eng;
+
 		static void Main(string[] args) {
-			Console.WriteLine("Hello, World!");
+			Eng = new GameEngine();
+			Eng.InitWindow(1920, 1080, "Tetraquark");
+
+			Eng.Camera = new GfxCamera();
+			Eng.Camera.SetZoom(3);
+
+			Eng.World = new GameWorld();
+
+			Eng.Run();
 		}
 	}
 }
