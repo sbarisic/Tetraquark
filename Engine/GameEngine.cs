@@ -18,12 +18,13 @@ namespace Tetraquark2.Engine {
 		Thread UpdateThread;
 		bool IsRunning;
 
+		public InputManager Input;
 		public GameWorld World;
 		public GfxCamera Camera;
 
 		public GameEngine() {
 			UpdateInterval = 30;
-			UpdateTimeStep = 1.0 / UpdateInterval; // 30 times per second
+			UpdateTimeStep = 1.0 / UpdateInterval;
 		}
 
 		public void InitWindow(int W, int H, string Title) {
@@ -34,7 +35,7 @@ namespace Tetraquark2.Engine {
 		}
 
 		void RunUpdates() {
-			Stopwatch SWatch = new Stopwatch();
+			Stopwatch SWatch = Stopwatch.StartNew();
 
 			while (IsRunning) {
 				if (SWatch.Elapsed.TotalSeconds >= UpdateTimeStep) {
@@ -52,7 +53,7 @@ namespace Tetraquark2.Engine {
 			UpdateThread.IsBackground = true;
 			UpdateThread.Start();
 
-			Stopwatch SWatch = new Stopwatch();
+			Stopwatch SWatch = Stopwatch.StartNew();
 			Thread.Sleep(1);
 			double Dt = 0;
 
@@ -60,6 +61,7 @@ namespace Tetraquark2.Engine {
 				Dt = SWatch.Elapsed.TotalSeconds;
 				SWatch.Restart();
 
+				HandleInput(Dt);
 				Draw(Dt);
 			}
 
@@ -69,6 +71,32 @@ namespace Tetraquark2.Engine {
 
 		public void Update(double Dt) {
 			World?.Update(Dt);
+		}
+
+		public void HandleInput(double Dt) {
+			float Wheel = Input.GetMouseWheel();
+			if (Wheel != 0) {
+				Vector2 MousePos = Input.GetMousePosition();
+				Vector2 WorldPos = Camera.ScreenToWorld(MousePos);
+
+				Camera.Offset = MousePos;
+				Camera.Target = WorldPos;
+
+				float Factor = 1.0f + (0.25f * Math.Abs(Wheel));
+				if (Wheel < 0)
+					Factor = 1.0f / Factor;
+
+				Camera.Zoom = Math.Clamp(Camera.Zoom * Factor, 0.125f, 64.0f);
+			}
+
+			if (Input.IsMouseButtonDown(TqMouseButton.Right)) {
+				Vector2 Delta = Input.GetMouseDelta();
+
+				Delta = Delta * (-1.0f / Camera.Zoom);
+				Camera.Target = Camera.Target + Delta;
+			}
+
+			World?.HandleInput(Dt);
 		}
 
 		public void Draw(double Dt) {

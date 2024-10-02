@@ -11,6 +11,10 @@ namespace Tetraquark2 {
 			Eng = new GameEngine();
 			Eng.InitWindow(1920, 1080, "Tetraquark");
 
+			WorldGenerator.Init();
+
+			Eng.Input = new InputManager();
+
 			Eng.Camera = new GfxCamera();
 			Eng.Camera.SetZoom(3);
 

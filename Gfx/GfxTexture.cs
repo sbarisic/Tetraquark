@@ -26,6 +26,9 @@ namespace Tetraquark2.Gfx {
 
 		public GfxRenderTexture(int Width, int Height) {
 			Tex = Raylib.LoadRenderTexture(Width, Height);
+
+			Raylib.SetTextureFilter(Tex.Texture, TextureFilter.Point);
+			Raylib.SetTextureWrap(Tex.Texture, TextureWrap.Clamp);
 		}
 
 		public void BeginRender() {
