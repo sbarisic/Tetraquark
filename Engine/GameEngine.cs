@@ -28,6 +28,7 @@ namespace Tetraquark2.Engine {
 		}
 
 		public void InitWindow(int W, int H, string Title) {
+			//Raylib.SetConfigFlags(ConfigFlags.VSyncHint);
 			Raylib.SetConfigFlags(ConfigFlags.Msaa4xHint);
 
 			Raylib.InitWindow(W, H, Title);

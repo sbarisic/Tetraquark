@@ -14,8 +14,9 @@ namespace Tetraquark2.Engine
 		TileChunk Map;
 
 		public GameWorld() {
-			Map = new TileChunk(32, 32, 10, 10);
+			Map = new TileChunk(32, 32, 16, 16);
 			Map.TilesetTexture = new GfxTexture("data/textures/tilemap_1.png");
+			Map.BlendMaskTexture = new GfxTexture("data/textures/blendmask.png");
 
 			WorldGenerator.Generate(Map);
 		}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -17,12 +18,14 @@ namespace Tetraquark2.Engine.Tiles {
 		public int ChunkX;
 		public int ChunkY;
 
+		Block EmptyBlock = new Block();
+
 		bool Dirty;
 		public Block[] Tiles;
 		public GfxRenderTexture ChunkTexture;
 
 		public GfxTexture TilesetTexture;
-
+		public GfxTexture BlendMaskTexture;
 
 		public TileChunk(int TileWidth, int TileHeight, int Width, int Height) {
 			this.Width = Width;
@@ -43,11 +46,38 @@ namespace Tetraquark2.Engine.Tiles {
 			Dirty = true;
 		}
 
+		public void GetTileTexturePos(int TileIndex, out int X, out int Y) {
+			int TilesCountX = TilesetTexture.Width / TileWidth;
+
+			X = TileIndex % TilesCountX;
+			Y = TileIndex / TilesCountX;
+		}
+
+		bool RangeValid(int X, int Y) {
+			if (X < 0 || Y < 0 || X >= Width || Y >= Height)
+				return false;
+
+			return true;
+		}
+
 		public Block GetBlock(int X, int Y) {
+			if (!RangeValid(X, Y))
+				return new Block();
+
 			return Tiles[Y * Width + X];
 		}
 
+		public ref Block GetBlockRef(int X, int Y) {
+			if (!RangeValid(X, Y))
+				return ref EmptyBlock;
+
+			return ref Tiles[Y * Width + X];
+		}
+
 		public void SetBlock(int X, int Y, Block Tile) {
+			if (!RangeValid(X, Y))
+				return;
+
 			Tiles[Y * Width + X] = Tile;
 			Dirty = true;
 		}
@@ -58,6 +88,8 @@ namespace Tetraquark2.Engine.Tiles {
 			Dirty = false;
 
 			ChunkTexture.BeginRender();
+
+
 
 			// Draw floors
 			for (int Y = 0; Y < Height; Y++)

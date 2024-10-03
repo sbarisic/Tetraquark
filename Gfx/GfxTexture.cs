@@ -10,6 +10,18 @@ namespace Tetraquark2.Gfx {
 	class GfxTexture {
 		public Texture2D Tex;
 
+		public int Width {
+			get {
+				return Tex.Width;
+			}
+		}
+
+		public int Height {
+			get {
+				return Tex.Height;
+			}
+		}
+
 		public GfxTexture(string FileName) {
 			Tex = Raylib.LoadTexture(FileName);
 
